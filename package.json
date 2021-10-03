@@ -4,7 +4,7 @@
   "description": "consumes marvel api search comic,hero, see description",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "webpack --config ./webpack/webpack.common.js"
   },
   "author": "Deepanshu Tiwari",
   "license": "ISC",
