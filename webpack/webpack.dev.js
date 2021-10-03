@@ -1,4 +1,5 @@
 const path = require("path");
+const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
 
 module.exports = {
   mode: "development",
@@ -10,4 +11,6 @@ module.exports = {
     port: 3000,
     hot: true,
   },
+
+  plugins: [new ReactRefreshWebpackPlugin()],
 };
