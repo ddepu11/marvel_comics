@@ -32,19 +32,12 @@
 body {
   min-height: 100vh;
   background-image: linear-gradient(
-    to left bottom,
-    #e1cfcf,
-    #d9c2c8,
-    #cdb6c4,
-    #beabc1,
-    #a9a2bf,
-    #97a5c8,
-    #7faacc,
-    #64aec8,
-    #54bdc1,
-    #67c9ac,
-    #93d08f,
-    #c9d177
+    to right top,
+    #051937,
+    #004d7a,
+    #008793,
+    #00bf72,
+    #a8eb12
   );
   color: white;
 }
@@ -59,7 +52,6 @@ a {
   text-decoration: none;
   color: white;
 }
-
 
 ul {
   list-style-type: none;
