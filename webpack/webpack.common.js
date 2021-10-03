@@ -2,7 +2,7 @@ const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = {
-  entry: path.resolve(__dirname, "../src/index.js"),
+  entry: path.resolve(__dirname, "../src/index.jsx"),
 
   plugins: [
     new HtmlWebpackPlugin({
@@ -13,7 +13,7 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.m?js$/,
+        test: /\.m?jsx?$/,
         exclude: /node_modules/,
         use: {
           loader: "babel-loader",
