@@ -1,0 +1,83 @@
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;700&display=swap");
+
+/*Utility class*/
+.flex {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.card {
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+
+  background-image: linear-gradient(
+    to right top,
+    #8492ed,
+    #c176d8,
+    #ed52a8,
+    #fd3a65,
+    #eb4b12
+  );
+  padding: 10px 25px;
+  border-radius: 20px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Open Sans", sans-serif;
+}
+
+body {
+  min-height: 100vh;
+  background-image: linear-gradient(
+    to left bottom,
+    #e1cfcf,
+    #d9c2c8,
+    #cdb6c4,
+    #beabc1,
+    #a9a2bf,
+    #97a5c8,
+    #7faacc,
+    #64aec8,
+    #54bdc1,
+    #67c9ac,
+    #93d08f,
+    #c9d177
+  );
+  color: white;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+a {
+  display: inline-block;
+  text-decoration: none;
+  color: white;
+}
+
+
+ul {
+  list-style-type: none;
+}
+
+button {
+  border: 0;
+}
+
+button:hover {
+  cursor: pointer;
+}
+
+input {
+  border: 0;
+}
+
+button:focus,
+input:focus {
+  outline: 0;
+}
