@@ -3,8 +3,23 @@ import styled from 'styled-components';
 const App = () => {
   console.log('Hello world');
 
+  const fetchData = async () => {
+    // const response = await fetch(
+    //   'https://jsonplaceholder.typicode.com/comments'
+    // );
+
+    // const data = await response.json();
+    // console.log(data);
+
+    console.log(process.env.MARVEL_KEY);
+  };
+
   return (
     <Wrapper className='flex'>
+      <button type='button' onClick={fetchData}>
+        Click Me
+      </button>
+
       <h2>This is a paragraph </h2>
     </Wrapper>
   );
