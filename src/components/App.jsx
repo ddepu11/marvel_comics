@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import Navbar from '../screens/Navbar/Navbar';
 import Comics from '../screens/Comics/Comics';
+import Characters from '../screens/Characters/Characters';
 
 const App = () => {
   console.log('App');
@@ -14,6 +15,10 @@ const App = () => {
         <Switch>
           <Route path='/comics' exact>
             <Comics />
+          </Route>
+
+          <Route path='/characters' exact>
+            <Characters />
           </Route>
         </Switch>
       </Router>
