@@ -10,6 +10,7 @@ module.exports = {
     static: path.resolve(__dirname, '../build'),
     port: 3000,
     hot: true,
+    historyApiFallback: true,
   },
 
   plugins: [new ReactRefreshWebpackPlugin()],
