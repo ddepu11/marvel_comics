@@ -30,6 +30,11 @@ module.exports = {
         test: /\.css$/i,
         use: ['style-loader', 'css-loader'],
       },
+      {
+        test: /\.(png|svg|jpg|jpeg|gif)$/i,
+        exclude: /\node_modules/, 
+        type: 'asset/resource',
+      },
     ],
   },
 
@@ -41,5 +46,7 @@ module.exports = {
     filename: 'bundle.js',
     path: path.resolve(__dirname, '../build'),
     clean: true,
+    assetModuleFilename: 'images/[hash][ext][query]',
+    publicPath: '/',
   },
 };
