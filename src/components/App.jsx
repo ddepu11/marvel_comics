@@ -1,47 +1,29 @@
 import styled from 'styled-components';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import Navbar from '../screens/Navbar/Navbar';
+import Comics from '../screens/Comics/Comics';
 
 const App = () => {
-  console.log('Hello world');
-
-  const fetchData = async () => {
-    // const response = await fetch(
-    //   'https://jsonplaceholder.typicode.com/comments'
-    // );
-
-    // const data = await response.json();
-    // console.log(data);
-
-    console.log(process.env.MARVEL_KEY);
-  };
+  console.log('App');
 
   return (
-    <Wrapper className='flex'>
-      <button type='button' onClick={fetchData}>
-        Click Me
-      </button>
+    <Wrapper className='w-960'>
+      <Router>
+        <Navbar />
 
-      <h2>This is a paragraph </h2>
+        <Switch>
+          <Route path='/comics' exact>
+            <Comics />
+          </Route>
+        </Switch>
+      </Router>
     </Wrapper>
   );
 };
 
 const Wrapper = styled.main`
-  padding: 5px 5px;
   flex-direction: column;
-  h2 {
-    letter-spacing: 1px;
-    font-size: 1.2em;
-    font-weight: 700;
-    color: #1a1919;
-  }
-
-  button {
-    padding: 5px 10px;
-    border-radius: 5px;
-    margin: 10px 0;
-    font-size: 0.9em;
-    font-weight: 400;
-  }
+  /* border: 1px solid #575757; */
 `;
 
 export default App;
