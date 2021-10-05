@@ -87,7 +87,38 @@ const useNavbarLogic = () => {
     }
   };
 
-  return { activeLink, handleActiveLink, genres, handleGenre, genreDropDown };
+  const [keyword, setKeyword] = useState('');
+
+  const handleKeyword = async (e) => {
+    const { value } = e.target;
+    setKeyword(value);
+
+    if (value) {
+      const searchEndPoint = `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${value}&language=en-US&include_adult=false`;
+
+      try {
+        const response = await fetch(searchEndPoint);
+
+        const { results } = await response.json();
+
+        dispatch(storeMovies(results));
+      } catch (err) {
+        dispatch(moviesError());
+      }
+    } else {
+      dispatch(storeMovies([]));
+    }
+  };
+
+  return {
+    activeLink,
+    handleActiveLink,
+    genres,
+    handleGenre,
+    genreDropDown,
+    keyword,
+    handleKeyword,
+  };
 };
 
 export default useNavbarLogic;

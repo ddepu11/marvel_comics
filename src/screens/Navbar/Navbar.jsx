@@ -3,14 +3,30 @@ import styled from 'styled-components';
 import useNavbarLogic from './Logic/useNavbarLogic';
 
 const Navbar = () => {
-  const { activeLink, handleActiveLink, genres, handleGenre, genreDropDown } =
-    useNavbarLogic();
+  const {
+    activeLink,
+    handleActiveLink,
+    genres,
+    handleGenre,
+    genreDropDown,
+    handleKeyword,
+    keyword,
+  } = useNavbarLogic();
 
   return (
     <Wrapper className='flex'>
       <Link to='/' className='logo'>
         <span>The Movies</span>
       </Link>
+
+      <div className='search'>
+        <input
+          type='text'
+          value={keyword}
+          placeholder='search movie'
+          onChange={handleKeyword}
+        />
+      </div>
 
       <ul className='links flex'>
         <li>
@@ -51,6 +67,13 @@ const Wrapper = styled.main`
     span {
       font-size: 2em;
       font-weight: 300;
+    }
+  }
+
+  .search {
+    input {
+      font-size: 0.9em;
+      padding: 4px 8px;
     }
   }
 
