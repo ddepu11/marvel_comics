@@ -35,16 +35,6 @@ const Navbar = () => {
 
         <li>
           <Link
-            to='/creators'
-            onClick={handleActiveLink}
-            className={activeLink === 'creators' ? 'active' : ''}
-          >
-            Creators
-          </Link>
-        </li>
-
-        <li>
-          <Link
             to='/events'
             onClick={handleActiveLink}
             className={activeLink === 'events' ? 'active' : ''}
@@ -60,16 +50,6 @@ const Navbar = () => {
             className={activeLink === 'series' ? 'active' : ''}
           >
             Series
-          </Link>
-        </li>
-
-        <li>
-          <Link
-            to='/stories'
-            onClick={handleActiveLink}
-            className={activeLink === 'stories' ? 'active' : ''}
-          >
-            Stories
           </Link>
         </li>
       </ul>

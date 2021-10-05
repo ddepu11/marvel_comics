@@ -3,18 +3,19 @@ import styled from 'styled-components';
 import Loading from '../../components/Loading';
 import useFetchData from '../../hooks/useFetchData';
 
-const Characters = () => {
-  const [characters, setCharacters] = useState([]);
+const Series = () => {
+  const [series, setSeries] = useState([]);
   const { loading, fetchData, data } = useFetchData();
 
   useEffect(() => {
-    if (characters.length === 0) {
-      fetchData('https://gateway.marvel.com:443/v1/public/characters');
+    if (series.length === 0) {
+      fetchData('https://gateway.marvel.com:443/v1/public/series');
+
       if (data) {
-        setCharacters(data);
+        setSeries(data);
       }
     }
-  }, [characters, fetchData, data]);
+  }, [series, fetchData, data]);
 
   if (loading) {
     return <Loading />;
@@ -22,12 +23,12 @@ const Characters = () => {
 
   return (
     <Wrapper>
-      {characters.length !== 0 && console.log(characters)}
+      {series.length !== 0 && console.log(series)}
 
-      <div className='characters'>
-        {characters.length !== 0 &&
-          characters.map((item) => (
-            <div key={item.id} className='character'>
+      <div className='series'>
+        {series.length !== 0 &&
+          series.map((item) => (
+            <div key={item.id} className='serie'>
               <div className='thumbnail'>
                 <img
                   src={`${item.thumbnail.path}.${item.thumbnail.extension}`}
@@ -36,7 +37,7 @@ const Characters = () => {
               </div>
 
               <div className='cover'>
-                <h1 className='title'>{item.name}</h1>
+                <h1 className='title'>{item.title}</h1>
               </div>
             </div>
           ))}
@@ -48,17 +49,18 @@ const Characters = () => {
 const Wrapper = styled.main`
   margin-top: 25px;
 
-  .characters {
+  .series {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, auto));
     gap: 17px 15px;
   }
 
-  .character {
+  .serie {
     position: relative;
     overflow: hidden;
     transition: transform 0.5s ease;
     border-radius: 5px;
+
     .thumbnail {
       width: 227px;
       height: 300px;
@@ -105,4 +107,4 @@ const Wrapper = styled.main`
   }
 `;
 
-export default Characters;
+export default Series;

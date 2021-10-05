@@ -3,6 +3,8 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import Navbar from '../screens/Navbar/Navbar';
 import Comics from '../screens/Comics/Comics';
 import Characters from '../screens/Characters/Characters';
+import Events from '../screens/Events/Events';
+import Series from '../screens/Series/Series';
 
 const App = () => {
   console.log('App');
@@ -19,6 +21,14 @@ const App = () => {
 
           <Route path='/characters' exact>
             <Characters />
+          </Route>
+
+          <Route path='/events' exact>
+            <Events />
+          </Route>
+
+          <Route path='/series' exact>
+            <Series />
           </Route>
         </Switch>
       </Router>
