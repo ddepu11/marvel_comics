@@ -1,7 +1,7 @@
 {
-  "name": "marvelcomics",
+  "name": "themovieapp",
   "version": "1.0.0",
-  "description": "consumes marvel api search comic,hero, see description",
+  "description": "consumes TMDB api search movie,view trailer, see description",
   "main": "index.js",
   "scripts": {
     "build": "webpack --config ./webpack/webpack.config.js --env env=prod",

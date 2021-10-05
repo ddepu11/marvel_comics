@@ -15,15 +15,15 @@ const Navbar = () => {
       <ul className='links flex'>
         <li>
           <Link
-            to='/comics'
+            to='/'
             onClick={handleActiveLink}
-            className={activeLink === 'comics' ? 'active' : ''}
+            className={activeLink === '/' ? 'active' : ''}
           >
-            Comics
+            Home
           </Link>
         </li>
 
-        <li>
+        {/* <li>
           <Link
             to='/characters'
             onClick={handleActiveLink}
@@ -43,7 +43,7 @@ const Navbar = () => {
           </Link>
         </li>
 
-        <li>
+        <li> 
           <Link
             to='/series'
             onClick={handleActiveLink}
@@ -52,6 +52,7 @@ const Navbar = () => {
             Series
           </Link>
         </li>
+        */}
       </ul>
     </Wrapper>
   );

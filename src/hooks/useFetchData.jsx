@@ -2,7 +2,8 @@ import { useEffect, useRef, useState } from 'react';
 
 const useFetchData = () => {
   const [loading, setLoading] = useState(false);
-  const [data, setData] = useState([]);
+  const [data, setData] = useState(null);
+
   const mounted = useRef(true);
 
   useEffect(
@@ -12,18 +13,16 @@ const useFetchData = () => {
     []
   );
 
-  const apiKey = process.env.MARVEL_KEY;
-
   const fetchData = async (endPoint) => {
     setLoading(true);
 
     try {
-      const response = await fetch(`${endPoint}?apikey=${apiKey}`);
+      const response = await fetch(endPoint);
 
-      const { data: newData } = await response.json();
+      const { results } = await response.json();
 
       if (mounted.current) {
-        setData(newData.results);
+        setData(results);
         setLoading(false);
       }
     } catch (err) {

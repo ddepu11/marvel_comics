@@ -1,10 +1,7 @@
 import styled from 'styled-components';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import Navbar from '../screens/Navbar/Navbar';
-import Comics from '../screens/Comics/Comics';
-import Characters from '../screens/Characters/Characters';
-import Events from '../screens/Events/Events';
-import Series from '../screens/Series/Series';
+import Home from '../screens/Home/Home';
 
 const App = () => {
   console.log('App');
@@ -15,20 +12,8 @@ const App = () => {
         <Navbar />
 
         <Switch>
-          <Route path='/comics' exact>
-            <Comics />
-          </Route>
-
-          <Route path='/characters' exact>
-            <Characters />
-          </Route>
-
-          <Route path='/events' exact>
-            <Events />
-          </Route>
-
-          <Route path='/series' exact>
-            <Series />
+          <Route path='/' exact>
+            <Home />
           </Route>
         </Switch>
       </Router>
