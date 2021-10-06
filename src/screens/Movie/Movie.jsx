@@ -50,11 +50,18 @@ const Movie = () => {
           }`}
           alt='/'
         />
+        {movie.tagline && (
+          <div className='tagline'>
+            <span>{movie.tagline}</span>
+          </div>
+        )}
       </div>
 
       <div className='details'>
         <div className='top flex'>
-          <h2 className='title'>{movie.original_title}</h2>
+          <h2 className='title'>
+            {movie.original_title ? movie.title : movie.original_title}
+          </h2>
           <p className='overview'>Overview:&nbsp;&nbsp;{movie.overview}</p>
         </div>
 
@@ -96,11 +103,27 @@ const Wrapper = styled.main`
     height: 500px;
     overflow: hidden;
     border-radius: 5px;
+    position: relative;
 
     img {
       width: 100%;
       height: 100%;
       object-fit: contain;
+    }
+
+    .tagline {
+      position: absolute;
+      bottom: 0;
+      right: 35px;
+      padding: 4px 8px;
+      background-color: rgba(0, 0, 0, 0.9);
+      border-radius: 1px;
+
+      span {
+        font-size: 0.8em;
+        font-weight: 400;
+        letter-spacing: 1px;
+      }
     }
   }
 
