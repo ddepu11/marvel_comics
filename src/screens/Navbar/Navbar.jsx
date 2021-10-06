@@ -16,7 +16,7 @@ const Navbar = () => {
   return (
     <Wrapper className='flex'>
       <Link to='/' className='logo'>
-        <span>The Movies</span>
+        <span>Movies DB</span>
       </Link>
 
       <div className='search'>
