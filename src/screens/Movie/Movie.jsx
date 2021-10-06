@@ -65,31 +65,61 @@ const Movie = () => {
           <p className='overview'>Overview:&nbsp;&nbsp;{movie.overview}</p>
         </div>
 
-        <span className='votes'>Avg votes: {movie.vote_average}</span>
+        <div className='middle flex'>
+          <div className='left'>
+            <span className='votes'>Avg votes: {movie.vote_average}</span>
 
-        {movie.genres && (
-          <h3 className='generes'>
-            Generes:&nbsp;&nbsp;&nbsp;
-            {movie.genres.map((item) => (
-              <span key={item.id} className='genere'>
-                {item.name},&nbsp;
+            {movie.genres && (
+              <h3 className='generes'>
+                Generes:&nbsp;&nbsp;&nbsp;
+                {movie.genres.map((item) => (
+                  <span key={item.id} className='genere'>
+                    {item.name},&nbsp;
+                  </span>
+                ))}
+              </h3>
+            )}
+
+            <span className='language'>
+              Orignal language: {movie.original_language}
+            </span>
+
+            {movie.spoken_languages && (
+              <span className='spoken_languages'>
+                Spoken Language:{'  '}
+                {movie.spoken_languages.map((item) => (
+                  <span key={item.iso_639_1}>
+                    {item.english_name},&nbsp;&nbsp;
+                  </span>
+                ))}
               </span>
-            ))}
-          </h3>
-        )}
+            )}
+          </div>
 
-        <span className='language'>
-          Orignal language: {movie.original_language}
-        </span>
+          <div className='right'>
+            {movie.production_companies.length !== 0 && (
+              <div className='prod_companies'>
+                <span className='prod_comp_heading'>
+                  Production companies: &nbsp;
+                </span>
+                {movie.production_companies.map((item) => (
+                  <span key={item.id}>{item.name}, </span>
+                ))}
+              </div>
+            )}
 
-        {movie.spoken_languages && (
-          <span className='spoken_languages'>
-            Spoken Language:{'  '}
-            {movie.spoken_languages.map((item) => (
-              <span key={item.iso_639_1}>{item.english_name},&nbsp;&nbsp;</span>
-            ))}
-          </span>
-        )}
+            {movie.production_countries.length !== 0 && (
+              <div className='prod_countries'>
+                <span className='prod_cont_heading'>
+                  Production countries: &nbsp;
+                </span>
+                {movie.production_countries.map((item) => (
+                  <span key={item.iso_3166_1}>{item.name}, </span>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
       </div>
     </Wrapper>
   );
@@ -146,31 +176,54 @@ const Wrapper = styled.main`
       }
     }
 
-    .votes {
-      font-size: 1em;
-      margin-top: 8px;
-      display: block;
-    }
+    .middle {
+      margin-top: 18px;
+      justify-content: space-between;
+      align-items: flex-start;
 
-    .generes {
-      margin-top: 10px;
-      font-size: 1em;
-      font-weight: 400;
+      .left {
+        .votes {
+          font-size: 1em;
+          display: block;
+        }
 
-      .genere {
-        margin: 0px;
+        .generes {
+          margin-top: 10px;
+          font-size: 1em;
+          font-weight: 400;
+
+          .genere {
+            margin: 0px;
+          }
+        }
+
+        .language {
+          margin-top: 8px;
+          display: block;
+        }
+
+        .spoken_languages {
+          font-size: 1em;
+          margin-top: 8px;
+          display: block;
+        }
       }
-    }
 
-    .language {
-      margin-top: 8px;
-      display: block;
-    }
+      .right {
+        width: 57%;
+        .prod_companies {
+          .prod_comp_heading {
+            font-weight: 500;
+          }
+        }
 
-    .spoken_languages {
-      font-size: 1em;
-      margin-top: 8px;
-      display: block;
+        .prod_countries {
+          margin-top: 10px;
+          .prod_cont_heading {
+            font-weight: 500;
+          }
+        }
+      }
     }
   }
 `;
