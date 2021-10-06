@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import {
   moviesError,
   moviesLoadingBegins,
@@ -9,6 +10,8 @@ import {
 } from '../../../features/movies';
 
 const useNavbarLogic = () => {
+  const history = useHistory();
+
   const [activeLink, setActiveLink] = useState('/');
 
   const handleActiveLink = (e) => {
@@ -91,9 +94,14 @@ const useNavbarLogic = () => {
 
   const handleKeyword = async (e) => {
     const { value } = e.target;
+
     setKeyword(value);
 
     if (value) {
+      if (history.location.pathname !== '/') {
+        history.push('/');
+      }
+
       const searchEndPoint = `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${value}&language=en-US&include_adult=false`;
 
       try {

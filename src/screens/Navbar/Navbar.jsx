@@ -65,7 +65,7 @@ const Wrapper = styled.main`
 
   .logo {
     span {
-      font-size: 2em;
+      font-size: 1.8em;
       font-weight: 300;
     }
   }

@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
 import Navbar from '../screens/Navbar/Navbar';
 import Home from '../screens/Home/Home';
+import Movie from '../screens/Movie/Movie';
 
 const App = () => {
   console.log('App');
@@ -15,6 +16,10 @@ const App = () => {
         <Switch>
           <Route path='/' exact>
             <Home />
+          </Route>
+
+          <Route path='/movie/:id' exact>
+            <Movie />
           </Route>
         </Switch>
       </Router>

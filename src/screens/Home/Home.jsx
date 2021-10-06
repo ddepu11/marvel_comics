@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import Loading from '../../components/Loading';
 import { storeMovies } from '../../features/movies';
@@ -54,18 +55,20 @@ const Home = () => {
         {movies.length !== 0 &&
           movies.map((item) => (
             <Movie key={item.id}>
-              <div className='image'>
-                <img
-                  src={`https://image.tmdb.org/t/p/w220_and_h330_face/${item.poster_path}`}
-                  alt={item.original_title}
-                />
-              </div>
+              <Link to={`/movie/${item.id}`}>
+                <div className='image'>
+                  <img
+                    src={`https://image.tmdb.org/t/p/w220_and_h330_face/${item.poster_path}`}
+                    alt={item.original_title}
+                  />
+                </div>
 
-              <div className='cover'>
-                <h1 className='title'>{item.original_title}</h1>
-              </div>
+                <div className='cover'>
+                  <h1 className='title'>{item.original_title}</h1>
+                </div>
 
-              <p className='rating'>{item.vote_average}</p>
+                <p className='rating'>{item.vote_average}</p>
+              </Link>
             </Movie>
           ))}
       </div>
@@ -85,8 +88,7 @@ const Wrapper = styled.main`
   .movies {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(220px, auto));
-
-    gap: 20px 10px;
+    gap: 30px 20px;
   }
 `;
 
@@ -98,11 +100,11 @@ const Movie = styled.main`
 
   .image {
     height: calc(200px * 1.5);
+    width: 232px;
 
     img {
       width: 100%;
       height: 100%;
-      display: inline-block;
     }
   }
 
