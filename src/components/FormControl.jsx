@@ -95,7 +95,7 @@ const Wrapper = styled.div`
     padding: 8px 0;
     .must {
       color: red;
-      font-size: 1.25em;
+      font-size: 1em;
     }
     label {
       font-size: ${({ labelFs }) => labelFs && labelFs};
@@ -111,9 +111,11 @@ const Wrapper = styled.div`
     padding: ${({ inputPadding }) => inputPadding && inputPadding};
     width: ${({ inputW }) => inputW && inputW};
   }
+
   .pwd-label {
     justify-content: space-between;
   }
+
   .message {
     font-size: ${({ messageFs }) => messageFs && messageFs};
   }
