@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 import { BsTwitter } from 'react-icons/bs';
 import FormControl from '../../components/FormControl';
 import Button from '../../components/Button';
@@ -94,12 +95,19 @@ const Login = () => {
           </div>
         </Button>
       </div>
+
+      <div className='sign_up flex'>
+        <span>Don&apos;t have an account ?</span>
+
+        <Link to='/signup'>Sign up</Link>
+      </div>
     </Wrapper>
   );
 };
 
 const Wrapper = styled.main`
   height: 70vh;
+  flex-direction: column;
 
   .center_box {
     box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px,
@@ -119,10 +127,24 @@ const Wrapper = styled.main`
       border-radius: 10px;
     }
   }
-
-  .btn_center {
+  padd .btn_center {
     span {
       margin-left: 10px;
+    }
+  }
+
+  .sign_up {
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px,
+      rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+    margin-top: 15px;
+    padding: 10px 27px;
+
+    span {
+      margin-right: 15px;
+    }
+
+    a {
+      color: #0be441;
     }
   }
 `;
