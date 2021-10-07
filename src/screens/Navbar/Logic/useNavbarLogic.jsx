@@ -73,6 +73,10 @@ const useNavbarLogic = () => {
   const handleGenre = async (e) => {
     const id = e.target.getAttribute('data-id');
 
+    if (history.location.pathname !== '/') {
+      history.push('/');
+    }
+
     dispatch(moviesLoadingBegins());
 
     const endPoint = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&language=en-IND&sort_by=popularity.desc&include_adult=true&include_video=true&page=1&with_watch_monetization_types=flatrate&with_genres=${id}`;
@@ -118,6 +122,11 @@ const useNavbarLogic = () => {
     }
   };
 
+  const handleClickOnLogo = () => {
+    setKeyword('');
+    dispatch(storeMovies([]));
+  };
+
   return {
     activeLink,
     handleActiveLink,
@@ -126,6 +135,8 @@ const useNavbarLogic = () => {
     genreDropDown,
     keyword,
     handleKeyword,
+    setKeyword,
+    handleClickOnLogo,
   };
 };
 

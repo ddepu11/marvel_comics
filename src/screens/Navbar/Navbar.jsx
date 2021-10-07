@@ -11,11 +11,12 @@ const Navbar = () => {
     genreDropDown,
     handleKeyword,
     keyword,
+    handleClickOnLogo,
   } = useNavbarLogic();
 
   return (
     <Wrapper className='flex'>
-      <Link to='/' className='logo'>
+      <Link to='/' className='logo' onClick={handleClickOnLogo}>
         <span>Movies DB</span>
       </Link>
 
