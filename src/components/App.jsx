@@ -21,7 +21,9 @@ import { clearNotification, successNofication } from '../features/notification';
 
 const App = () => {
   const dispatch = useDispatch();
+
   const { userLoading } = useSelector((state) => state.user.value);
+
   const { message, success, error } = useSelector(
     (state) => state.notification.value
   );
@@ -36,7 +38,7 @@ const App = () => {
     }
 
     if (message && error) {
-      showSuccessNotification(message);
+      showErrorNotification(message);
       dispatch(clearNotification());
     }
   }, [
