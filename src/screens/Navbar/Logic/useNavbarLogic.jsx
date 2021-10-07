@@ -15,10 +15,14 @@ import {
   storeGenres,
   storeMovies,
 } from '../../../features/movies';
+import {
+  errorNofication,
+  successNofication,
+} from '../../../features/notification';
 
 const useNavbarLogic = () => {
   const history = useHistory();
-  const { userLoggedIn } = useSelector((state) => state.user.value);
+  const { userLoggedIn, info } = useSelector((state) => state.user.value);
 
   const [activeLink, setActiveLink] = useState('/');
 
@@ -133,11 +137,9 @@ const useNavbarLogic = () => {
   };
 
   const handleClickOnLogo = () => {
-    dispatch(userLoadingBegins());
     setActiveLink('/');
     setKeyword('');
     dispatch(storeMovies([]));
-    dispatch(userLoadingEnds());
   };
 
   const handleLogOut = () => {
@@ -145,10 +147,11 @@ const useNavbarLogic = () => {
 
     signOut(authInstance)
       .then(() => {
+        dispatch(successNofication(`Successfully logged out user!`));
         dispatch(logOut());
       })
       .catch((err) => {
-        console.log(err);
+        dispatch(errorNofication(err.code));
         dispatch(userLoadingEnds());
       });
   };
@@ -165,6 +168,7 @@ const useNavbarLogic = () => {
     handleClickOnLogo,
     userLoggedIn,
     handleLogOut,
+    info,
   };
 };
 

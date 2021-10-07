@@ -5,8 +5,14 @@ import Button from '../../components/Button';
 import useLoginLogic from './Logic/useLoginLogic';
 
 const Login = () => {
-  const { handleInput, credentials, handleSubmit, handleLoginViaTwitter } =
-    useLoginLogic();
+  const {
+    handleInput,
+    credentials,
+    handleSubmit,
+    handleLoginViaTwitter,
+    emailValidationMessageTag,
+    passwordValidationMessageTag,
+  } = useLoginLogic();
 
   return (
     <Wrapper className='flex'>
@@ -25,6 +31,8 @@ const Login = () => {
               inputFs='0.9em'
               handleInput={handleInput}
               inputValue={credentials.email}
+              refObj={emailValidationMessageTag}
+              messageFs='0.9em'
             />
           </div>
 
@@ -42,6 +50,8 @@ const Login = () => {
               fcPadding=''
               handleInput={handleInput}
               inputValue={credentials.password}
+              refObj={passwordValidationMessageTag}
+              messageFs='0.9em'
             />
           </div>
 

@@ -15,6 +15,7 @@ const Navbar = () => {
     handleClickOnLogo,
     userLoggedIn,
     handleLogOut,
+    info,
   } = useNavbarLogic();
 
   return (
@@ -31,6 +32,16 @@ const Navbar = () => {
           onChange={handleKeyword}
         />
       </div>
+
+      {userLoggedIn && (
+        <div className='flex'>
+          <div className='user_dp'>
+            <img src={info.dp} alt='' />
+          </div>
+
+          <div className='display_name'>{info.displayName}</div>
+        </div>
+      )}
 
       <ul className='links flex'>
         <li>
@@ -111,6 +122,25 @@ const Wrapper = styled.main`
       font-size: 0.9em;
       padding: 4px 8px;
     }
+  }
+
+  .user_dp {
+    width: 30px;
+    height: 30px;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+  }
+
+  .display_name {
+    margin-left: 10px;
+    font-weight: 500;
+    color: #ffffff;
+    font-size: 1em;
   }
 
   .links {
