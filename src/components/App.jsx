@@ -17,6 +17,7 @@ import {
 } from '../features/user';
 import Loading from './Loading';
 import useNotificationOps from './useNotificationOps';
+import Signup from '../screens/Signup/Signup';
 import { clearNotification, successNofication } from '../features/notification';
 
 const App = () => {
@@ -31,6 +32,7 @@ const App = () => {
   const { showSuccessNotification, showErrorNotification } =
     useNotificationOps();
 
+  // For showing notification
   useEffect(() => {
     if (message && success) {
       showSuccessNotification(message);
@@ -89,6 +91,10 @@ const App = () => {
 
             <Route path='/login' exact>
               <Login />
+            </Route>
+
+            <Route path='/signup' exact>
+              <Signup />
             </Route>
 
             <Route path='/movie/:id' exact>
