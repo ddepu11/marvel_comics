@@ -31,10 +31,19 @@ export const userSlice = createSlice({
         userLoggedIn: true,
       };
     },
+
+    logOut: (state = initialState) => {
+      state.value = {
+        userLoading: false,
+        info: null,
+        id: null,
+        userLoggedIn: false,
+      };
+    },
   },
 });
 
-export const { userLoadingBegins, storeUserInfo, userLoadingEnds } =
+export const { userLoadingBegins, storeUserInfo, userLoadingEnds, logOut } =
   userSlice.actions;
 
 export default userSlice.reducer;

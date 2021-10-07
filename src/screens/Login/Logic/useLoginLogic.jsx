@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { TwitterAuthProvider, signInWithPopup } from 'firebase/auth';
 import { authInstance } from '../../../config/firebase';
-import { userLoadingBegins } from '../../../features/user';
+import { userLoadingBegins, userLoadingEnds } from '../../../features/user';
 
 const useLoginLogic = () => {
   const dispatch = useDispatch();
@@ -33,12 +33,10 @@ const useLoginLogic = () => {
     const provider = new TwitterAuthProvider();
 
     signInWithPopup(authInstance, provider)
-      .then((result) => {
-        const { user } = result;
-        console.log(user);
-      })
+      .then(() => {})
       .catch((error) => {
         console.log(error);
+        dispatch(userLoadingEnds());
       });
   };
 

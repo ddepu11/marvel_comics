@@ -1,6 +1,13 @@
 import { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
+import { signOut } from 'firebase/auth';
+import { authInstance } from '../../../config/firebase';
+import {
+  logOut,
+  userLoadingBegins,
+  userLoadingEnds,
+} from '../../../features/user';
 import {
   moviesError,
   moviesLoadingBegins,
@@ -126,12 +133,25 @@ const useNavbarLogic = () => {
   };
 
   const handleClickOnLogo = () => {
+    dispatch(userLoadingBegins());
     setActiveLink('/');
     setKeyword('');
     dispatch(storeMovies([]));
+    dispatch(userLoadingEnds());
   };
 
-  const handleLogOut = () => {};
+  const handleLogOut = () => {
+    dispatch(userLoadingBegins());
+
+    signOut(authInstance)
+      .then(() => {
+        dispatch(logOut());
+      })
+      .catch((err) => {
+        console.log(err);
+        dispatch(userLoadingEnds());
+      });
+  };
 
   return {
     activeLink,
