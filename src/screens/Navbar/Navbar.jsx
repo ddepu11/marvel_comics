@@ -40,6 +40,16 @@ const Navbar = () => {
           </Link>
         </li>
 
+        <li>
+          <Link
+            to='/login'
+            onClick={handleActiveLink}
+            className={activeLink === 'login' ? 'active' : ''}
+          >
+            Login
+          </Link>
+        </li>
+
         <li
           className='genere'
           onClick={() => genreDropDown.current.classList.add('show')}

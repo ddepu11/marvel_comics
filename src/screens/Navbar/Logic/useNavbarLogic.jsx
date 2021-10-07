@@ -73,6 +73,8 @@ const useNavbarLogic = () => {
   const handleGenre = async (e) => {
     const id = e.target.getAttribute('data-id');
 
+    setActiveLink('/');
+
     if (history.location.pathname !== '/') {
       history.push('/');
     }
@@ -123,6 +125,7 @@ const useNavbarLogic = () => {
   };
 
   const handleClickOnLogo = () => {
+    setActiveLink('/');
     setKeyword('');
     dispatch(storeMovies([]));
   };
