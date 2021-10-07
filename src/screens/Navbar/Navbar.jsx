@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import useNavbarLogic from './Logic/useNavbarLogic';
+import Button from '../../components/Button';
 
 const Navbar = () => {
   const {
@@ -12,6 +13,8 @@ const Navbar = () => {
     handleKeyword,
     keyword,
     handleClickOnLogo,
+    userLoggedIn,
+    handleLogOut,
   } = useNavbarLogic();
 
   return (
@@ -40,15 +43,17 @@ const Navbar = () => {
           </Link>
         </li>
 
-        <li>
-          <Link
-            to='/login'
-            onClick={handleActiveLink}
-            className={activeLink === 'login' ? 'active' : ''}
-          >
-            Login
-          </Link>
-        </li>
+        {!userLoggedIn && (
+          <li>
+            <Link
+              to='/login'
+              onClick={handleActiveLink}
+              className={activeLink === 'login' ? 'active' : ''}
+            >
+              Login
+            </Link>
+          </li>
+        )}
 
         <li
           className='genere'
@@ -65,6 +70,26 @@ const Navbar = () => {
               </span>
             ))}
         </div>
+
+        {userLoggedIn && (
+          <li>
+            <Button
+              type='submit'
+              fs='0.9em'
+              width='100%'
+              padding='5px 10px'
+              margin='0 0 0 8px'
+              borderRadius='5px'
+              bgColor='#eb4343'
+              color='#fffbfb'
+              transform=''
+              fWeight='500'
+              handleClick={handleLogOut}
+            >
+              Logout
+            </Button>
+          </li>
+        )}
       </ul>
     </Wrapper>
   );

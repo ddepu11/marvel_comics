@@ -12,7 +12,7 @@ const initialState = {
   },
 };
 
-export const counterSlice = createSlice({
+export const moviesSlice = createSlice({
   name: 'movies',
 
   initialState,
@@ -59,6 +59,6 @@ export const {
   moviesError,
   storeGenres,
   setApiEndPointAndGenere,
-} = counterSlice.actions;
+} = moviesSlice.actions;
 
-export default counterSlice.reducer;
+export default moviesSlice.reducer;

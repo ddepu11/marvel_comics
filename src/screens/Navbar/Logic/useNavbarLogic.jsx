@@ -11,6 +11,7 @@ import {
 
 const useNavbarLogic = () => {
   const history = useHistory();
+  const { userLoggedIn } = useSelector((state) => state.user.value);
 
   const [activeLink, setActiveLink] = useState('/');
 
@@ -58,7 +59,7 @@ const useNavbarLogic = () => {
 
   useEffect(() => {
     const clickListenerFunc = (e) => {
-      if (!e.target.matches('.GEN')) {
+      if (!e.target.matches('.GEN') && genreDropDown.current) {
         genreDropDown.current.classList.remove('show');
       }
     };
@@ -130,6 +131,8 @@ const useNavbarLogic = () => {
     dispatch(storeMovies([]));
   };
 
+  const handleLogOut = () => {};
+
   return {
     activeLink,
     handleActiveLink,
@@ -140,6 +143,8 @@ const useNavbarLogic = () => {
     handleKeyword,
     setKeyword,
     handleClickOnLogo,
+    userLoggedIn,
+    handleLogOut,
   };
 };
 
