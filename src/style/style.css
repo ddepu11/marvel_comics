@@ -78,3 +78,12 @@ input:focus {
   max-width: 960px;
   margin: 0 auto;
 }
+
+.message.error {
+  color: rgb(175, 25, 25);
+  font-weight: 700;
+}
+.message.success {
+  color: rgb(17, 95, 17);
+  font-weight: 700;
+}
