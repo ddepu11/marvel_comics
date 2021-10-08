@@ -11,14 +11,13 @@ const validateForm = (
 ) => {
   let errorFlag = false;
 
-  const { email, password, fullName, userName } = credentials;
+  const { email, password, fullName, confirmPassword } = credentials;
 
   const {
     emailValidationMessageTag,
-    passwordValidationMessageTag,
-
     fullNameValidationMessageTag,
-    userNameValidationMessageTag,
+    passwordValidationMessageTag,
+    confirmPasswordValidationMessageTag,
   } = validationMessageTags;
 
   // Email Validation
@@ -74,37 +73,6 @@ const validateForm = (
       errorFlag = true;
     }
 
-    // userName validation
-    if (isLength(userName, 0, 4)) {
-      setValidationMessage(
-        'user name is too short!',
-        'error',
-        setTimeOutId,
-        userNameValidationMessageTag
-      );
-      errorFlag = true;
-    }
-
-    if (!isLength(userName, 0, 15)) {
-      setValidationMessage(
-        'user name is too lengthy!',
-        'error',
-        setTimeOutId,
-        userNameValidationMessageTag
-      );
-      errorFlag = true;
-    }
-
-    if (isEmpty(userName)) {
-      setValidationMessage(
-        "user name can't be empty!",
-        'error',
-        setTimeOutId,
-        userNameValidationMessageTag
-      );
-      errorFlag = true;
-    }
-
     // Password validation
     if (!isLength(password, 0, 20)) {
       setValidationMessage(
@@ -112,6 +80,37 @@ const validateForm = (
         'error',
         setTimeOutId,
         passwordValidationMessageTag
+      );
+      errorFlag = true;
+    }
+
+    // Confirm password
+    if (!isLength(confirmPassword, 0, 20)) {
+      setValidationMessage(
+        'Confirm password is too lengthy!',
+        'error',
+        setTimeOutId,
+        confirmPasswordValidationMessageTag
+      );
+      errorFlag = true;
+    }
+
+    if (isLength(confirmPassword, 0, 2)) {
+      setValidationMessage(
+        'confirm password is too short!',
+        'error',
+        setTimeOutId,
+        confirmPasswordValidationMessageTag
+      );
+      errorFlag = true;
+    }
+
+    if (isEmpty(confirmPassword)) {
+      setValidationMessage(
+        "confirm password can't be empty!",
+        'error',
+        setTimeOutId,
+        confirmPasswordValidationMessageTag
       );
       errorFlag = true;
     }
