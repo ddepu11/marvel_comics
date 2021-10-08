@@ -127,6 +127,7 @@ const Wrapper = styled.main`
       border-radius: 10px;
     }
   }
+
   padd .btn_center {
     span {
       margin-left: 10px;

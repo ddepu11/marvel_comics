@@ -4,11 +4,13 @@ import { useHistory } from 'react-router-dom';
 import {
   TwitterAuthProvider,
   signInWithPopup,
-  // signInWithEmailAndPassword,
+  signInWithEmailAndPassword,
 } from 'firebase/auth';
-import { authInstance } from '../../../config/firebase';
+import { addDoc, collection, query, where, getDocs } from 'firebase/firestore';
+import { authInstance, firestoreInstance } from '../../../config/firebase';
+
 import { userLoadingBegins, userLoadingEnds } from '../../../features/user';
-import { successNofication } from '../../../features/notification';
+import { errorNofication } from '../../../features/notification';
 import validateForm from '../../../utils/validateForm';
 
 const useLoginLogic = () => {
@@ -49,21 +51,62 @@ const useLoginLogic = () => {
     );
 
     if (!error) {
-      console.log(error);
+      signInWithEmailAndPassword(
+        authInstance,
+        credentials.email,
+        credentials.password
+      )
+        .then(() => {})
+        .catch((err) => {
+          dispatch(errorNofication(err.code));
+        });
+    }
+  };
+
+  const saveUserInfoinFirestore = async (info) => {
+    try {
+      await addDoc(collection(firestoreInstance, 'users'), info);
+    } catch (err) {
+      dispatch(errorNofication(err.code));
+      dispatch(userLoadingEnds());
+    }
+  };
+
+  const checkIfUserInfoSaved = async (userInfo) => {
+    try {
+      const q = query(
+        collection(firestoreInstance, 'users'),
+        where('email', '==', userInfo.email)
+      );
+
+      const usersSnapshot = await getDocs(q);
+
+      if (usersSnapshot.size === 0) {
+        saveUserInfoinFirestore(userInfo);
+      }
+    } catch (err) {
+      dispatch(errorNofication(err.code));
+      dispatch(userLoadingEnds());
     }
   };
 
   const handleLoginViaTwitter = () => {
     dispatch(userLoadingBegins());
 
-    // userLoadingBegins, storeUserInfo
     const provider = new TwitterAuthProvider();
 
     signInWithPopup(authInstance, provider)
-      .then(() => {})
+      .then(({ user }) => {
+        const userInfo = {
+          displayName: user.displayName,
+          email: user.email,
+          dp: user.photoURL,
+        };
+
+        checkIfUserInfoSaved(userInfo);
+      })
       .catch((err) => {
-        console.log(err);
-        dispatch(successNofication(err.code));
+        dispatch(errorNofication(err.code));
         dispatch(userLoadingEnds());
       });
   };
