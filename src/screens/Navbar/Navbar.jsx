@@ -66,6 +66,18 @@ const Navbar = () => {
           </li>
         )}
 
+        {!userLoggedIn && (
+          <li>
+            <Link
+              to='/signup'
+              onClick={handleActiveLink}
+              className={activeLink === 'signup' ? 'active' : ''}
+            >
+              Signup
+            </Link>
+          </li>
+        )}
+
         <li
           className='genere'
           onClick={() => genreDropDown.current.classList.add('show')}
