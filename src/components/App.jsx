@@ -8,7 +8,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { collection, query, where, getDocs } from 'firebase/firestore';
 import Navbar from '../screens/Navbar/Navbar';
 import Home from '../screens/Home/Home';
-import Movie from '../screens/Movie/Movie';
+import MovieDetails from '../screens/MovieDetails/MovieDetails';
 import Login from '../screens/Login/Login';
 import { authInstance, firestoreInstance } from '../config/firebase';
 import {
@@ -126,7 +126,7 @@ const App = () => {
             </Route>
 
             <Route path='/movie/:id' exact>
-              <Movie />
+              <MovieDetails />
             </Route>
           </Switch>
         </Router>

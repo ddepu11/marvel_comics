@@ -108,6 +108,7 @@ const useSignUpLogic = () => {
           fileName: picName,
           url: dpUrl,
         },
+        likedMovies: [],
       });
 
       signUpUser();

@@ -65,7 +65,10 @@ const useLoginLogic = () => {
 
   const saveUserInfoinFirestore = async (info) => {
     try {
-      await addDoc(collection(firestoreInstance, 'users'), info);
+      await addDoc(collection(firestoreInstance, 'users'), {
+        ...info,
+        likedMovies: [],
+      });
     } catch (err) {
       dispatch(errorNofication(err.code));
       dispatch(userLoadingEnds());
