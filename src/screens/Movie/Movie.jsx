@@ -11,6 +11,8 @@ const Movie = () => {
   const apiKey = process.env.TMDB_API_KEY;
 
   useEffect(() => {
+    let mounted = true;
+
     const endPoint = `https://api.themoviedb.org/3/movie/${id}?api_key=${apiKey}&language=en-US&append_to_response=videos`;
 
     const fetchMovieData = async () => {
@@ -19,26 +21,42 @@ const Movie = () => {
 
         const data = await response.json();
 
-        if (data) {
+        if (data && mounted) {
           setMovie(data);
           setLoading(false);
           console.log(data);
-        } else {
+        } else if (mounted) {
           setLoading(false);
         }
       } catch (err) {
-        setLoading(false);
-        console.log(err);
+        if (mounted) setLoading(false);
       }
     };
 
     if (!movie) {
       fetchMovieData();
     }
+
+    return () => {
+      mounted = false;
+    };
   }, [id, movie, apiKey]);
 
   if (loading) {
     return <Loading />;
+  }
+
+  const hours = Math.floor(movie.runtime / 60);
+  const minutes = movie.runtime - hours * 60;
+
+  let runtime = ``;
+
+  if (minutes !== 0) {
+    runtime = `${minutes}m`;
+  }
+
+  if (hours !== 0) {
+    runtime = `${hours}h ${runtime}`;
   }
 
   return (
@@ -59,9 +77,15 @@ const Movie = () => {
 
       <div className='details'>
         <div className='top flex'>
-          <h2 className='title'>
-            {movie.original_title ? movie.title : movie.original_title}
-          </h2>
+          <div className='title_and_btns flex'>
+            <div className='title_div'>
+              <h2 className='title'>
+                {movie.original_title ? movie.title : movie.original_title}
+              </h2>
+            </div>
+
+            <div className='btns'>s</div>
+          </div>
           <p className='overview'>Overview:&nbsp;&nbsp;{movie.overview}</p>
         </div>
 
@@ -118,6 +142,14 @@ const Movie = () => {
                 ))}
               </div>
             )}
+
+            {runtime !== '' && (
+              <span className='runtime'>Runtime: &nbsp;&nbsp;{runtime}</span>
+            )}
+
+            {movie.status !== '' && (
+              <span className='status'>Status: &nbsp;&nbsp;{movie.status}</span>
+            )}
           </div>
         </div>
       </div>
@@ -160,14 +192,23 @@ const Wrapper = styled.main`
   .details {
     padding: 0 0px 0 33px;
     margin-top: 15px;
+
     .top {
       flex-direction: column;
       align-items: flex-start;
 
-      .title {
-        font-size: 1.4em;
-        font-weight: 500;
-        letter-spacing: 1px;
+      .title_and_btns {
+        justify-content: space-between;
+        width: 96.5%;
+
+        .title {
+          font-size: 1.4em;
+          font-weight: 500;
+          letter-spacing: 1px;
+        }
+
+        .btns {
+        }
       }
 
       .overview {
@@ -222,6 +263,15 @@ const Wrapper = styled.main`
           .prod_cont_heading {
             font-weight: 500;
           }
+        }
+
+        .runtime {
+          margin-top: 5px;
+          display: block;
+        }
+
+        .status {
+          margin-top: 5px;
         }
       }
     }
