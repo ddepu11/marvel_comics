@@ -70,6 +70,6 @@ input:focus {
 }
 
 .message.success {
-  color: rgb(17, 95, 17);
+  color: rgb(15, 219, 15);
   font-weight: 700;
 }
