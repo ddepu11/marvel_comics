@@ -1,16 +1,54 @@
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import dummyUserPic from '../../assets/dummyUserPic.svg';
 import Button from '../../components/Button';
 import FormControl from '../../components/FormControl';
 import useSignUpLogic from './Logic/useSignUpLogic';
 
 const Signup = () => {
-  const { handleSubmit, handleInput, credentials, vmTags } = useSignUpLogic();
+  const {
+    handleSubmit,
+    handleInput,
+    credentials,
+    vmTags,
+    handleDisplayPic,
+    displayPicture,
+    displayPictureValidationMessageTag,
+  } = useSignUpLogic();
 
   return (
     <Wrapper className='flex'>
       <div className='center_box'>
-        <form onSubmit={handleSubmit}>
+        <form>
+          <div className='preview_row flex'>
+            <label className='preview' htmlFor='displayPicture'>
+              <img
+                src={
+                  displayPicture.preview === ''
+                    ? dummyUserPic
+                    : displayPicture.preview
+                }
+                alt='preview'
+              />
+
+              <input
+                id='displayPicture'
+                type='file'
+                name='displayPicture'
+                style={{ display: 'none' }}
+                accept='.png, .jpg, .jpeg'
+                onChange={handleDisplayPic}
+              />
+            </label>
+
+            <span className='text'>
+              Select display picture
+              <span style={{ color: '#dd0a0a', fontSize: '1.2em' }}> *</span>
+            </span>
+
+            <p ref={displayPictureValidationMessageTag} className='message' />
+          </div>
+
           <div className='row'>
             <FormControl
               label='Full name'
@@ -26,6 +64,7 @@ const Signup = () => {
               inputValue={credentials.fullName}
               refObj={vmTags.fullNameValidationMessageTag}
               messageFs='0.9em'
+              fcPadding='00px 0px'
             />
           </div>
 
@@ -44,6 +83,7 @@ const Signup = () => {
               inputValue={credentials.email}
               refObj={vmTags.emailValidationMessageTag}
               messageFs='0.9em'
+              fcPadding='5px 0px'
             />
           </div>
 
@@ -62,6 +102,7 @@ const Signup = () => {
               inputValue={credentials.password}
               refObj={vmTags.passwordValidationMessageTag}
               messageFs='0.9em'
+              fcPadding='5px 0px'
             />
           </div>
 
@@ -80,50 +121,28 @@ const Signup = () => {
               inputValue={credentials.confirmPassword}
               refObj={vmTags.confirmPasswordValidationMessageTag}
               messageFs='0.9em'
+              fcPadding='5px 0px'
             />
           </div>
 
           <Button
-            type='submit'
+            type='button'
             fs='0.9em'
             width='100%'
-            margin='25px 0 0 0'
+            margin='20px 0 0 0'
             padding='5px 0px'
             borderRadius='5px'
             bgColor='#d8d6d6'
             color='#000'
             transform=''
+            handleClick={handleSubmit}
           >
             Signup
           </Button>
         </form>
-
-        {/* <div className='or_row flex'>
-          <div className='left' />
-          <span>OR</span>
-          <div className='right' />
-        </div> */}
-
-        {/* <Button
-          type='submit'
-          fs='0.9em'
-          width='100%'
-          margin='15px 0 0 0'
-          padding='5px 0px'
-          borderRadius='5px'
-          bgColor='#d8d6d6'
-          color='#000'
-          transform=''
-          handleClick={handleLoginViaTwitter}
-        >
-          <div className='btn_center flex'>
-            <BsTwitter color='#156d96fa' />
-            <span>Login via twitter</span>
-          </div>
-        </Button> */}
       </div>
 
-      <div className='sign_up flex'>
+      <div className='log_in flex'>
         <span>Have an account ?</span>
 
         <Link to='/login'>Login</Link>
@@ -134,12 +153,35 @@ const Signup = () => {
 
 const Wrapper = styled.main`
   flex-direction: column;
-  height: 70vh;
+  margin-top: 20px;
 
   .center_box {
     box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px,
       rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
-    padding: 20px 50px;
+    padding: 5px 40px;
+  }
+
+  .preview_row {
+    flex-direction: column;
+
+    .preview {
+      width: 150px;
+      height: 150px;
+      display: block;
+
+      img {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        object-fit: cover;
+      }
+    }
+
+    .text {
+      padding: 10px 0 2px;
+      font-size: 0.9em;
+      text-align: center;
+    }
   }
 
   .or_row {
@@ -155,17 +197,17 @@ const Wrapper = styled.main`
     }
   }
 
-  padd .btn_center {
+  .btn_center {
     span {
       margin-left: 10px;
     }
   }
 
-  .sign_up {
+  .log_in {
     box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px,
       rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
-    margin-top: 15px;
-    padding: 10px 27px;
+    margin-top: 8px;
+    padding: 10px 45px;
 
     span {
       margin-right: 15px;
