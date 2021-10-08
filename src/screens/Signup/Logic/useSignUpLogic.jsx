@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import validateForm from '../../../utils/validateForm';
 import setValidationMessage from '../../../utils/setValidationMessage';
+import clearAllSetTimeoutOrSetInterval from '../../../utils/clearAllSetTimeoutOrSetInterval';
 
 const useSignUpLogic = () => {
   const [credentials, setCredentials] = useState({
@@ -21,7 +22,31 @@ const useSignUpLogic = () => {
 
   const lastSetTimeOutId = useRef();
 
-  useEffect(() => {}, [lastSetTimeOutId]);
+  useEffect(() => {
+    if (
+      credentials.confirmPassword &&
+      credentials.password === credentials.confirmPassword
+    ) {
+      setValidationMessage(
+        'password matched',
+        'success',
+        lastSetTimeOutId,
+        vmTags.confirmPasswordValidationMessageTag,
+        4000
+      );
+    } else {
+      vmTags.confirmPasswordValidationMessageTag.current.innerText = '';
+    }
+
+    return () => {
+      clearAllSetTimeoutOrSetInterval(lastSetTimeOutId);
+    };
+  }, [
+    lastSetTimeOutId,
+    credentials.confirmPassword,
+    credentials.password,
+    vmTags.confirmPasswordValidationMessageTag,
+  ]);
 
   const handleInput = (e) => {
     const { name, value } = e.target;
