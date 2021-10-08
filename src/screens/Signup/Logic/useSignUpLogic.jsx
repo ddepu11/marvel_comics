@@ -1,9 +1,28 @@
 import { useState, useRef, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import {
+  fetchSignInMethodsForEmail,
+  createUserWithEmailAndPassword,
+} from 'firebase/auth';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { collection, addDoc } from 'firebase/firestore';
+import {
+  // successNofication,
+  errorNofication,
+} from '../../../features/notification';
+import { userLoadingBegins, userLoadingEnds } from '../../../features/user';
+import {
+  authInstance,
+  firestoreInstance,
+  storageInstance,
+} from '../../../config/firebase';
 import validateForm from '../../../utils/validateForm';
 import setValidationMessage from '../../../utils/setValidationMessage';
 import clearAllSetTimeoutOrSetInterval from '../../../utils/clearAllSetTimeoutOrSetInterval';
 
 const useSignUpLogic = () => {
+  const dispatch = useDispatch();
+
   const [credentials, setCredentials] = useState({
     fullName: '',
     email: '',
@@ -61,11 +80,65 @@ const useSignUpLogic = () => {
 
   const handleDisplayPic = (e) => {
     const file = e.target.files[0];
-
     setDisplayPicture({ file, preview: URL.createObjectURL(file) });
   };
 
-  const handleSubmit = () => {
+  const signUpUser = () => {
+    createUserWithEmailAndPassword(
+      authInstance,
+      credentials.email,
+      credentials.confirmPassword
+    )
+      .then(() => {
+        console.log('user doc saved!');
+      })
+      .catch((err) => {
+        dispatch(errorNofication(err.code));
+        dispatch(userLoadingEnds());
+      });
+  };
+
+  const saveUserInfoInFirestore = async (dpUrl, picName) => {
+    const { password, confirmPassword, ...userInfo } = credentials;
+
+    try {
+      await addDoc(collection(firestoreInstance, 'users'), {
+        ...userInfo,
+        dp: {
+          fileName: picName,
+          url: dpUrl,
+        },
+      });
+
+      signUpUser();
+    } catch (err) {
+      dispatch(errorNofication(err.code));
+      dispatch(userLoadingEnds());
+    }
+  };
+
+  const uploadDp = async () => {
+    const picName = `DP_${credentials.email}_${Math.floor(
+      Math.random() * Date.now()
+    )}`;
+
+    const dpImageRef = ref(
+      storageInstance,
+      `displayPictures/${picName}.${displayPicture.file.type.split('/')[1]}`
+    );
+
+    try {
+      await uploadBytes(dpImageRef, displayPicture.file);
+
+      const dpUrl = await getDownloadURL(dpImageRef);
+      saveUserInfoInFirestore(dpUrl, picName);
+    } catch (err) {
+      dispatch(errorNofication(err.code));
+      dispatch(userLoadingEnds());
+    }
+  };
+
+  const handleSubmit = async () => {
     let error = validateForm(credentials, vmTags, lastSetTimeOutId, 'SIGN_UP');
 
     if (displayPicture.file === null) {
@@ -79,7 +152,31 @@ const useSignUpLogic = () => {
     }
 
     if (!error) {
-      console.log(credentials, displayPicture);
+      dispatch(userLoadingBegins());
+
+      try {
+        const methods = await fetchSignInMethodsForEmail(
+          authInstance,
+          credentials.email
+        );
+
+        if (methods.length > 0) {
+          dispatch(userLoadingEnds());
+
+          dispatch(
+            errorNofication(
+              'This email address is already being used by someone else!'
+            )
+          );
+        } else {
+          uploadDp();
+        }
+      } catch (err) {
+        dispatch(errorNofication(err.code));
+        dispatch(userLoadingEnds());
+      }
+
+      // signUpUser();
     }
   };
 

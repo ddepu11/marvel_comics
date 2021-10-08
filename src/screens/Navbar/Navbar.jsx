@@ -36,10 +36,15 @@ const Navbar = () => {
       {userLoggedIn && (
         <div className='flex'>
           <div className='user_dp'>
-            <img src={info.dp} alt='' />
+            <img
+              src={typeof info.dp === 'string' ? info.dp : info.dp.url}
+              alt=''
+            />
           </div>
 
-          <div className='display_name'>{info.displayName}</div>
+          <div className='display_name'>
+            {info.displayName ? info.displayName : info.fullName}
+          </div>
         </div>
       )}
 

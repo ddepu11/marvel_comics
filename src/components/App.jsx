@@ -5,11 +5,12 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import { onAuthStateChanged } from 'firebase/auth';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { collection, query, where, getDocs } from 'firebase/firestore';
 import Navbar from '../screens/Navbar/Navbar';
 import Home from '../screens/Home/Home';
 import Movie from '../screens/Movie/Movie';
 import Login from '../screens/Login/Login';
-import { authInstance } from '../config/firebase';
+import { authInstance, firestoreInstance } from '../config/firebase';
 import {
   storeUserInfo,
   userLoadingBegins,
@@ -18,7 +19,11 @@ import {
 import Loading from './Loading';
 import useNotificationOps from './useNotificationOps';
 import Signup from '../screens/Signup/Signup';
-import { clearNotification, successNofication } from '../features/notification';
+import {
+  clearNotification,
+  errorNofication,
+  successNofication,
+} from '../features/notification';
 
 const App = () => {
   const dispatch = useDispatch();
@@ -55,17 +60,40 @@ const App = () => {
   useEffect(() => {
     dispatch(userLoadingBegins());
 
+    const fetchUserData = async (email) => {
+      const usersRef = collection(firestoreInstance, 'users');
+
+      const q = query(usersRef, where('email', '==', email));
+
+      try {
+        const querySnapshot = await getDocs(q);
+
+        querySnapshot.forEach((doc) => {
+          dispatch(successNofication(`Welcome back ${doc.get('fullName')}`));
+
+          dispatch(storeUserInfo({ info: doc.data(), id: doc.id }));
+        });
+      } catch (err) {
+        dispatch(errorNofication(err.code));
+        dispatch(userLoadingEnds());
+      }
+    };
+
     onAuthStateChanged(authInstance, (user) => {
       if (user) {
-        const userInfo = {
-          displayName: user.displayName,
-          email: user.email,
-          dp: user.photoURL,
-        };
+        if (user.providerData[0].providerId !== 'password') {
+          const userInfo = {
+            displayName: user.displayName,
+            email: user.email,
+            dp: user.photoURL,
+          };
 
-        dispatch(successNofication(`Welcome back ${userInfo.displayName}`));
+          dispatch(successNofication(`Welcome back ${userInfo.displayName}`));
 
-        dispatch(storeUserInfo({ info: userInfo, id: user.uid }));
+          dispatch(storeUserInfo({ info: userInfo, id: user.uid }));
+        } else {
+          fetchUserData(user.email);
+        }
       } else {
         dispatch(userLoadingEnds());
       }
