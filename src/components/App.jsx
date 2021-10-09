@@ -134,14 +134,17 @@ const App = () => {
 
     onAuthStateChanged(authInstance, (user) => {
       if (user) {
+        // Runs when you log in using email and password
         if (user.providerData[0].providerId === 'password') {
           fetchUserData(user.email);
         } else {
+          // Runs when you log in using twitter
           const userInfo = {
             fullName: user.displayName,
             email: user.email,
             dp: user.photoURL,
             likedMovies: [],
+            watchLater: [],
           };
 
           checkIfUserInfoSaved(userInfo);
