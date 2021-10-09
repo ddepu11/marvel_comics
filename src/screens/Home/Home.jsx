@@ -43,18 +43,21 @@ const Home = () => {
 
   return (
     <Wrapper>
-      {/* {movies.length !== 0 && console.log(movies)} */}
-
       <div className='heading'>
         {currentGenere !== ''
           ? `${currentGenere} genere movies:`
           : 'Popular movies:'}
       </div>
 
-      <div className='movies '>
-        {movies.length !== 0 &&
-          movies.map((item) => <Movie movie={item} key={item.id} />)}
-      </div>
+      {movies.length !== 0 ? (
+        <div className='movies '>
+          {movies.map((item) => (
+            <Movie movie={item} key={item.id} />
+          ))}
+        </div>
+      ) : (
+        <h1 className='no_movies'>Sorry there are no movies to show!</h1>
+      )}
     </Wrapper>
   );
 };
@@ -70,8 +73,15 @@ const Wrapper = styled.main`
 
   .movies {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, auto));
+    grid-template-columns: repeat(auto-fit, minmax(225px, auto));
     gap: 30px 20px;
+  }
+
+  .no_movies {
+    text-align: center;
+    margin-top: 100px;
+    font-weight: 400;
+    font-size: 1.2em;
   }
 `;
 
