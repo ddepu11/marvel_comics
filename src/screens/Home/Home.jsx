@@ -11,11 +11,16 @@ const Home = () => {
 
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
-  const [movies, setMovies] = useState([]);
 
-  const { movieLoading, apiEndPoint, currentGenereId, genres } = useSelector(
-    (state) => state.movies.value
-  );
+  const {
+    movieLoading,
+    apiEndPoint,
+    currentGenereId,
+    genres,
+    movies: globalMovies,
+  } = useSelector((state) => state.movies.value);
+
+  const [movies, setMovies] = useState([]);
 
   useEffect(() => {
     let mounted = true;
@@ -62,6 +67,7 @@ const Home = () => {
 
       if (
         !loading &&
+        globalMovies.length === 0 &&
         ineerHeightPlusScrollY >= document.body.scrollHeight - 100
       ) {
         if (mounted) {
@@ -75,7 +81,7 @@ const Home = () => {
       mounted = false;
       window.removeEventListener('scroll', scrollEvent);
     };
-  }, [apiEndPoint, loading]);
+  }, [apiEndPoint, loading, globalMovies.length]);
 
   if (movieLoading) {
     return <Loading />;
@@ -101,7 +107,7 @@ const Home = () => {
           : 'Popular movies:'}
       </div>
 
-      {movies.length !== 0 ? (
+      {movies.length !== 0 && globalMovies.length === 0 && (
         <div className='movies '>
           {movies.map((item) => (
             <Movie
@@ -110,8 +116,21 @@ const Home = () => {
             />
           ))}
         </div>
-      ) : (
+      )}
+
+      {/* : (
         <h1 className='no_movies'>Sorry there are no movies to show!</h1>
+      ) */}
+
+      {globalMovies.length !== 0 && (
+        <div className='movies '>
+          {globalMovies.map((item) => (
+            <Movie
+              movie={item}
+              key={Math.floor(Math.random() * item.id * Date.now())}
+            />
+          ))}
+        </div>
       )}
 
       {loading && <Loading size='20vh' />}
