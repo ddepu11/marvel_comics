@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
@@ -20,10 +21,14 @@ import { storeUserInfo, userLoadingEnds } from '../../features/user';
 const Movie = ({ movie }) => {
   const dispatch = useDispatch();
 
+  const [loading, setLoading] = useState(false);
+
   const { info, userLoggedIn, id } = useSelector((state) => state.user.value);
 
   const dislikeMovie = async (e) => {
     e.preventDefault();
+
+    setLoading(true);
 
     try {
       const userDocRef = doc(firestoreInstance, 'users', id);
@@ -43,6 +48,7 @@ const Movie = ({ movie }) => {
         );
       }
 
+      setLoading(false);
       dispatch(successNofication(`disliked the movie!`));
     } catch (err) {
       dispatch(errorNofication(err.code.slice(5)));
@@ -52,6 +58,9 @@ const Movie = ({ movie }) => {
 
   const likeMovie = async (e) => {
     e.preventDefault();
+
+    setLoading(true);
+
     try {
       const userDocRef = doc(firestoreInstance, 'users', id);
 
@@ -70,6 +79,7 @@ const Movie = ({ movie }) => {
         );
       }
 
+      setLoading(false);
       dispatch(successNofication(`liked the movie!`));
     } catch (err) {
       dispatch(errorNofication(err.code.slice(5)));
@@ -103,6 +113,12 @@ const Movie = ({ movie }) => {
           </div>
         )}
       </Link>
+
+      {loading && (
+        <div className='loading_cover'>
+          <h1>Loading...</h1>
+        </div>
+      )}
     </Wrapper>
   );
 };
@@ -170,6 +186,22 @@ const Wrapper = styled.main`
   :hover {
     cursor: pointer;
     transform: scale(1.04) translateY(-5px);
+  }
+
+  .loading_cover {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 100%;
+    display: grid;
+    place-content: center;
+    background: rgba(0, 0, 0, 0.8);
+
+    h1 {
+      font-size: 1em;
+      font-weight: 500;
+      letter-spacing: 1px;
+    }
   }
 `;
 
