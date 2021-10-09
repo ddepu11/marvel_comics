@@ -6,8 +6,8 @@ import {
   signInWithPopup,
   signInWithEmailAndPassword,
 } from 'firebase/auth';
-import { addDoc, collection, query, where, getDocs } from 'firebase/firestore';
-import { authInstance, firestoreInstance } from '../../../config/firebase';
+
+import { authInstance } from '../../../config/firebase';
 
 import { userLoadingBegins, userLoadingEnds } from '../../../features/user';
 import { errorNofication } from '../../../features/notification';
@@ -51,6 +51,8 @@ const useLoginLogic = () => {
     );
 
     if (!error) {
+      dispatch(userLoadingBegins());
+
       signInWithEmailAndPassword(
         authInstance,
         credentials.email,
@@ -58,38 +60,9 @@ const useLoginLogic = () => {
       )
         .then(() => {})
         .catch((err) => {
-          dispatch(errorNofication(err.code));
+          dispatch(errorNofication(err.code.slice(5)));
+          dispatch(userLoadingEnds());
         });
-    }
-  };
-
-  const saveUserInfoinFirestore = async (info) => {
-    try {
-      await addDoc(collection(firestoreInstance, 'users'), {
-        ...info,
-        likedMovies: [],
-      });
-    } catch (err) {
-      dispatch(errorNofication(err.code));
-      dispatch(userLoadingEnds());
-    }
-  };
-
-  const checkIfUserInfoSaved = async (userInfo) => {
-    try {
-      const q = query(
-        collection(firestoreInstance, 'users'),
-        where('email', '==', userInfo.email)
-      );
-
-      const usersSnapshot = await getDocs(q);
-
-      if (usersSnapshot.size === 0) {
-        saveUserInfoinFirestore(userInfo);
-      }
-    } catch (err) {
-      dispatch(errorNofication(err.code));
-      dispatch(userLoadingEnds());
     }
   };
 
@@ -99,17 +72,9 @@ const useLoginLogic = () => {
     const provider = new TwitterAuthProvider();
 
     signInWithPopup(authInstance, provider)
-      .then(({ user }) => {
-        const userInfo = {
-          displayName: user.displayName,
-          email: user.email,
-          dp: user.photoURL,
-        };
-
-        checkIfUserInfoSaved(userInfo);
-      })
-      .catch((err) => {
-        dispatch(errorNofication(err.code));
+      .then(() => {})
+      .catch(() => {
+        dispatch(errorNofication('Account exists with different credentials!'));
         dispatch(userLoadingEnds());
       });
   };

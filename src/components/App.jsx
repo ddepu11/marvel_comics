@@ -5,7 +5,14 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import { onAuthStateChanged } from 'firebase/auth';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { collection, query, where, getDocs } from 'firebase/firestore';
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  addDoc,
+  getDoc,
+} from 'firebase/firestore';
 import Navbar from '../screens/Navbar/Navbar';
 import Home from '../screens/Home/Home';
 import MovieDetails from '../screens/MovieDetails/MovieDetails';
@@ -79,20 +86,63 @@ const App = () => {
       }
     };
 
+    const saveUserInfoinFirestore = async (info) => {
+      try {
+        const userDocRef = await addDoc(
+          collection(firestoreInstance, 'users'),
+          info
+        );
+
+        const docSnap = await getDoc(userDocRef);
+
+        if (docSnap.exists()) {
+          dispatch(
+            successNofication(`Welcome back ${docSnap.get('fullName')}`)
+          );
+
+          dispatch(storeUserInfo({ info: docSnap.data(), id: docSnap.id }));
+        } else {
+          dispatch(userLoadingEnds());
+        }
+      } catch (err) {
+        dispatch(errorNofication(err.code));
+        dispatch(userLoadingEnds());
+      }
+    };
+
+    const checkIfUserInfoSaved = async (userInfo) => {
+      try {
+        const q = query(
+          collection(firestoreInstance, 'users'),
+          where('email', '==', userInfo.email)
+        );
+
+        const usersSnapshot = await getDocs(q);
+
+        if (usersSnapshot.size === 0) {
+          saveUserInfoinFirestore(userInfo);
+        } else {
+          fetchUserData(userInfo.email);
+        }
+      } catch (err) {
+        dispatch(errorNofication(err.code));
+        dispatch(userLoadingEnds());
+      }
+    };
+
     onAuthStateChanged(authInstance, (user) => {
       if (user) {
-        if (user.providerData[0].providerId !== 'password') {
+        if (user.providerData[0].providerId === 'password') {
+          fetchUserData(user.email);
+        } else {
           const userInfo = {
-            displayName: user.displayName,
+            fullName: user.displayName,
             email: user.email,
             dp: user.photoURL,
+            likedMovies: [],
           };
 
-          dispatch(successNofication(`Welcome back ${userInfo.displayName}`));
-
-          dispatch(storeUserInfo({ info: userInfo, id: user.uid }));
-        } else {
-          fetchUserData(user.email);
+          checkIfUserInfoSaved(userInfo);
         }
       } else {
         dispatch(userLoadingEnds());
