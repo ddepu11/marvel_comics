@@ -369,7 +369,7 @@ const MovieDetails = () => {
   const addMovieToPlaylist = (e) => {
     const pId = e.target.getAttribute('data-id');
 
-    // setDropDownLoading(true);
+    setDropDownLoading(true);
 
     playlists.forEach(async (p) => {
       if (p.id === pId) {
