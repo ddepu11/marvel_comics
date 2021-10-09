@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { FcLike, FcLikePlaceholder } from 'react-icons/fc';
 import { FaPlay } from 'react-icons/fa';
+import { AiOutlineClose } from 'react-icons/ai';
 import { BsStopwatch, BsStopwatchFill } from 'react-icons/bs';
 import YouTube from 'react-youtube';
 import {
@@ -36,7 +37,7 @@ const MovieDetails = () => {
   const [loading, setLoading] = useState(true);
   const videosDropDown = useRef(null);
   const [movie, setMovie] = useState(null);
-  const [play, setPlay] = useState(false);
+  const [video, setVideo] = useState({ play: false, id: null });
   const apiKey = process.env.TMDB_API_KEY;
 
   useEffect(() => {
@@ -229,10 +230,9 @@ const MovieDetails = () => {
   // Video player
 
   const opts = {
-    height: '390',
-    width: '640',
+    height: '600',
+    width: '1200',
     playerVars: {
-      // https://developers.google.com/youtube/player_parameters
       autoplay: 1,
     },
   };
@@ -245,11 +245,22 @@ const MovieDetails = () => {
     videosDropDown.current.classList.add('show');
   };
 
+  const setVideoIdAndPlay = (e) => {
+    const videoID = e.target.getAttribute('data-id');
+    setVideo({ play: true, id: videoID });
+  };
+
   return (
     <Wrapper>
-      {play && (
+      {video.play && (
         <PlayerWrapper>
-          <YouTube videoId='BaVa3myLuWk' opts={opts} onReady={handleOnReady} />;
+          <YouTube videoId={video.id} opts={opts} onReady={handleOnReady} />;
+          <div
+            className='close'
+            onClick={() => setVideo({ play: false, id: null })}
+          >
+            <AiOutlineClose color='#ffffff' style={{ pointerEvents: 'none' }} />
+          </div>
         </PlayerWrapper>
       )}
       <div className='banner'>
@@ -306,7 +317,7 @@ const MovieDetails = () => {
                 </div>
               )}
 
-              {movie.videos && (
+              {movie.videos && movie.videos.results.length !== 0 && (
                 <Button
                   type='button'
                   dataVal='playBtn'
@@ -321,10 +332,14 @@ const MovieDetails = () => {
               )}
 
               <div className='videos_dropdown flex' ref={videosDropDown}>
-                {movie.videos.results !== 0 &&
-                  movie.videos.results.map((item) => (
-                    <span key={item.id} data-id={item.key}>
-                      {item.type}
+                {movie.videos.results.length !== 0 &&
+                  movie.videos.results.map((item, index) => (
+                    <span
+                      key={item.id}
+                      data-id={item.key}
+                      onClick={setVideoIdAndPlay}
+                    >
+                      {index + 1}.&nbsp;&nbsp;{item.type}
                     </span>
                   ))}
               </div>
@@ -458,17 +473,17 @@ const Wrapper = styled.main`
         .btns {
           font-size: 1.45em;
           position: relative;
+          justify-content: space-between;
+          width: 20%;
 
           .like_or_dislike:hover {
             cursor: pointer;
           }
 
           .like_or_dislike {
-            margin-right: 12px;
           }
 
           .watch_later {
-            margin-right: 12px;
           }
 
           .watch_later:hover {
@@ -479,16 +494,14 @@ const Wrapper = styled.main`
             cursor: pointer;
           }
 
-          width: 20%;
-
           .videos_dropdown {
             position: absolute;
-            bottom: 120%;
-            left: 0;
+            bottom: 125%;
+            right: 0;
             z-index: 2;
             background: #2da8ce;
             width: 200px;
-            padding: 5px 10px;
+            padding: 8px 10px;
             border-radius: 10px;
             flex-direction: column;
             align-items: flex-start;
@@ -498,7 +511,7 @@ const Wrapper = styled.main`
 
             span {
               width: 100%;
-              padding: 5px;
+              padding: 8px;
               font-size: 0.8em;
             }
             span:hover {
@@ -593,7 +606,19 @@ const PlayerWrapper = styled.main`
   display: grid;
   place-content: center;
   background: rgba(0, 0, 0, 0.9);
-  z-index: 9;
+  z-index: 5;
+
+  .close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-size: 2em;
+    z-index: 6;
+  }
+
+  .close:hover {
+    cursor: pointer;
+  }
 `;
 
 export default MovieDetails;
