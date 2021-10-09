@@ -35,7 +35,6 @@ const WatchLater = () => {
           if (info.watchLater.length - 1 === index) {
             setMovies(newMovies);
             setLoading(false);
-            console.log(newMovies);
           }
         } catch (err) {
           dispatch(errorNofication(err.code.slice(5)));

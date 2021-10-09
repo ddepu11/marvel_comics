@@ -35,7 +35,6 @@ const LikedMovies = () => {
           if (info.likedMovies.length - 1 === index) {
             setMovies(newMovies);
             setLoading(false);
-            console.log(newMovies);
           }
         } catch (err) {
           dispatch(errorNofication(err.code.slice(5)));
