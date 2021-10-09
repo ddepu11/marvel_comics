@@ -33,6 +33,7 @@ import {
   successNofication,
 } from '../features/notification';
 import LikedMovies from '../screens/LikedMovies/LikedMovies';
+import Error from '../screens/Error';
 
 const App = () => {
   const dispatch = useDispatch();
@@ -190,6 +191,10 @@ const App = () => {
 
             <Route path='/movie/:id' exact>
               <MovieDetails />
+            </Route>
+
+            <Route path='*'>
+              <Error />
             </Route>
           </Switch>
         </Router>
