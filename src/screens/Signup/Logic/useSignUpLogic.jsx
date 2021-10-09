@@ -6,9 +6,11 @@ import {
 } from 'firebase/auth';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { collection, addDoc } from 'firebase/firestore';
+import { useHistory } from 'react-router-dom';
 import {
   // successNofication,
   errorNofication,
+  successNofication,
 } from '../../../features/notification';
 import { userLoadingBegins, userLoadingEnds } from '../../../features/user';
 import {
@@ -41,6 +43,7 @@ const useSignUpLogic = () => {
 
   const lastSetTimeOutId = useRef();
 
+  // Showing/removing password matched message
   useEffect(() => {
     if (
       credentials.confirmPassword &&
@@ -69,7 +72,6 @@ const useSignUpLogic = () => {
 
   const handleInput = (e) => {
     const { name, value } = e.target;
-
     setCredentials({ ...credentials, [name]: value });
   };
 
@@ -83,6 +85,8 @@ const useSignUpLogic = () => {
     setDisplayPicture({ file, preview: URL.createObjectURL(file) });
   };
 
+  const history = useHistory();
+
   const signUpUser = () => {
     createUserWithEmailAndPassword(
       authInstance,
@@ -90,6 +94,8 @@ const useSignUpLogic = () => {
       credentials.confirmPassword
     )
       .then(() => {
+        dispatch(successNofication('Successfully signed up!'));
+        history.push('/');
         console.log('user doc saved!');
       })
       .catch((err) => {
@@ -109,6 +115,7 @@ const useSignUpLogic = () => {
           url: dpUrl,
         },
         likedMovies: [],
+        watchLater: [],
       });
 
       signUpUser();
