@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
@@ -24,11 +24,19 @@ const Movie = ({ movie }) => {
   const [loading, setLoading] = useState(false);
 
   const { info, userLoggedIn, id } = useSelector((state) => state.user.value);
+  const mounted = useRef(true);
+
+  useEffect(
+    () => () => {
+      mounted.current = false;
+    },
+    []
+  );
 
   const dislikeMovie = async (e) => {
     e.preventDefault();
 
-    setLoading(true);
+    if (mounted.current) setLoading(true);
 
     try {
       const userDocRef = doc(firestoreInstance, 'users', id);
@@ -48,7 +56,7 @@ const Movie = ({ movie }) => {
         );
       }
 
-      setLoading(false);
+      if (mounted.current) setLoading(false);
       dispatch(successNofication(`disliked the movie!`));
     } catch (err) {
       dispatch(errorNofication(err.code.slice(5)));
@@ -59,7 +67,7 @@ const Movie = ({ movie }) => {
   const likeMovie = async (e) => {
     e.preventDefault();
 
-    setLoading(true);
+    if (mounted.current) setLoading(true);
 
     try {
       const userDocRef = doc(firestoreInstance, 'users', id);
@@ -79,10 +87,9 @@ const Movie = ({ movie }) => {
         );
       }
 
-      setLoading(false);
+      if (mounted.current) setLoading(false);
       dispatch(successNofication(`liked the movie!`));
     } catch (err) {
-      console.log(err);
       dispatch(errorNofication(err.code.slice(5)));
       dispatch(userLoadingEnds());
     }
@@ -145,13 +152,18 @@ const Wrapper = styled.main`
   border-radius: 10px;
   overflow: hidden;
 
+  a {
+    width: 100%;
+  }
+
   .image {
-    height: calc(200px * 1.5);
-    width: 232px;
+    height: 100%;
+    min-width: 100%;
 
     img {
       width: 100%;
       height: 100%;
+      object-fit: cover;
     }
   }
 
