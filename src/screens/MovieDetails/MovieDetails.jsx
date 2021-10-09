@@ -334,7 +334,10 @@ const MovieDetails = () => {
                 </Button>
               )}
 
-              <div className='videos_dropdown flex' ref={videosDropDown}>
+              <VideosDropDown
+                className='videos_dropdown flex'
+                ref={videosDropDown}
+              >
                 {movie.videos.results.length !== 0 &&
                   movie.videos.results.map((item, index) => (
                     <span
@@ -345,9 +348,7 @@ const MovieDetails = () => {
                       {index + 1}.&nbsp;&nbsp;{item.type}
                     </span>
                   ))}
-              </div>
-
-              {/* ssss */}
+              </VideosDropDown>
             </div>
           </div>
 
@@ -496,42 +497,6 @@ const Wrapper = styled.main`
           .play_btns:hover {
             cursor: pointer;
           }
-
-          .videos_dropdown {
-            position: absolute;
-            bottom: 125%;
-            right: 0;
-            z-index: 2;
-            background: #2da8ce;
-            width: 220px;
-            max-height: 400px;
-            padding: 8px 10px;
-            border-radius: 10px;
-            flex-direction: column;
-            align-items: flex-start;
-            overflow-y: scroll;
-            opacity: 0;
-            pointer-events: none;
-
-            span {
-              width: 100%;
-              padding: 8px;
-              font-size: 0.7em;
-            }
-
-            span:hover {
-              background-color: #fff;
-              color: black;
-              font-weight: 400;
-              border-radius: 4px;
-              cursor: pointer;
-            }
-          }
-
-          .videos_dropdown.show {
-            opacity: 0.95;
-            pointer-events: all;
-          }
         }
       }
 
@@ -599,6 +564,42 @@ const Wrapper = styled.main`
         }
       }
     }
+  }
+`;
+
+const VideosDropDown = styled.div`
+  position: absolute;
+  bottom: 125%;
+  right: 0;
+  z-index: 2;
+  background: #2da8ce;
+  width: 220px;
+  max-height: 400px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  flex-direction: column;
+  align-items: flex-start;
+  overflow-y: scroll;
+  opacity: 0;
+  pointer-events: none;
+
+  span {
+    width: 100%;
+    padding: 8px;
+    font-size: 0.7em;
+  }
+
+  span:hover {
+    background-color: #fff;
+    color: black;
+    font-weight: 400;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  &.show {
+    opacity: 0.95;
+    pointer-events: all;
   }
 `;
 
