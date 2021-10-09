@@ -98,19 +98,9 @@ const useNavbarLogic = () => {
 
     dispatch(moviesLoadingBegins());
 
-    const endPoint = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&language=en-IND&sort_by=popularity.desc&include_adult=true&include_video=true&page=1&with_watch_monetization_types=flatrate&with_genres=${id}`;
+    const endPoint = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&language=en-IND&sort_by=popularity.desc&include_adult=false&include_video=true&page=1&with_watch_monetization_types=flatrate&with_genres=${id}`;
 
-    // with_genres
-    try {
-      const response = await fetch(endPoint);
-
-      const { results } = await response.json();
-
-      dispatch(storeMovies(results));
-      dispatch(setApiEndPointAndGenere({ endPoint, genereId: id }));
-    } catch (err) {
-      dispatch(moviesError());
-    }
+    dispatch(setApiEndPointAndGenere({ endPoint, genereId: id }));
   };
 
   const [keyword, setKeyword] = useState('');
@@ -145,6 +135,15 @@ const useNavbarLogic = () => {
     setActiveLink('/');
     setKeyword('');
     dispatch(storeMovies([]));
+
+    const endPointforPopularMovies = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&language=en-IND&sort_by=popularity.desc&include_adult=false&include_video=true&with_watch_monetization_types=flatrate`;
+
+    dispatch(
+      setApiEndPointAndGenere({
+        endPoint: endPointforPopularMovies,
+        genereId: null,
+      })
+    );
   };
 
   const handleLogOut = () => {

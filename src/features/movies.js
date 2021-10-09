@@ -7,7 +7,7 @@ const initialState = {
     movieLoading: false,
     movies: [],
     genres: [],
-    apiEndPoint: `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&language=en-IND&sort_by=popularity.desc&include_adult=true&include_video=true&with_watch_monetization_types=flatrate`,
+    apiEndPoint: `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&language=en-IND&sort_by=popularity.desc&include_adult=false&include_video=true&with_watch_monetization_types=flatrate`,
     currentGenereId: null,
   },
 };
