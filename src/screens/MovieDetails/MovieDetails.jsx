@@ -366,29 +366,39 @@ const MovieDetails = () => {
     }
   };
 
-  const addMovieToPlaylist = async (e) => {
-    console.log(e.target.getAttribute('data-id'));
+  const addMovieToPlaylist = (e) => {
+    const pId = e.target.getAttribute('data-id');
 
-    // try {
-    //   const userDocRef = doc(firestoreInstance, 'playlists', userDocId);
-    //   await updateDoc(userDocRef, {
-    //     movies: arrayUnion(movie.id),
-    //   });
-    //   const docSnap = await getDoc(userDocRef);
-    //   if (docSnap.exists()) {
-    //     dispatch(
-    //       storeUserInfo({
-    //         info: docSnap.data(),
-    //         id: userDocId,
-    //       })
-    //     );
-    //   }
-    //   setLoading(false);
-    //   dispatch(successNofication(`liked the movie!`));
-    // } catch (err) {
-    //   dispatch(errorNofication(err.code.slice(5)));
-    //   dispatch(userLoadingEnds());
-    // }
+    // setDropDownLoading(true);
+
+    playlists.forEach(async (p) => {
+      if (p.id === pId) {
+        if (p.movies.includes(movie.id)) {
+          setDropDownLoading(false);
+          dispatch(errorNofication(`Already added to playlist!`));
+        } else {
+          try {
+            const playlistDocRef = doc(firestoreInstance, 'playlists', pId);
+
+            await updateDoc(playlistDocRef, {
+              movies: arrayUnion(movie.id),
+            });
+
+            fetchUserPlaylist();
+            dispatch(successNofication(`Added to playlist!`));
+
+            // const pSnap = await getDoc(playlistDocRef);
+            // if (pSnap.exists()) {
+            //   setPlaylists({ ...pSnap.data(), id: pSnap.id });
+            //   setDropDownLoading(false);
+            // }
+          } catch (err) {
+            dispatch(errorNofication(err.code.slice(5)));
+            setDropDownLoading(false);
+          }
+        }
+      }
+    });
   };
 
   return (
@@ -544,7 +554,8 @@ const MovieDetails = () => {
               >
                 {dropDownLoading && <Loading size='10vh' />}
 
-                {!dropDownLoading && playlists.length !== 0 ? (
+                {!dropDownLoading &&
+                  playlists.length !== 0 &&
                   playlists.map((i) => (
                     <span
                       // key={Math.floor(Math.random() * Date.now())}
@@ -556,8 +567,9 @@ const MovieDetails = () => {
                     >
                       {i.name}
                     </span>
-                  ))
-                ) : (
+                  ))}
+
+                {playlists.length === 0 && (
                   <h4 className='no_playlists'>There are no playlists</h4>
                 )}
 
