@@ -1,22 +1,80 @@
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import {
+  doc,
+  updateDoc,
+  arrayUnion,
+  arrayRemove,
+  getDoc,
+} from 'firebase/firestore';
 import { FcLike, FcLikePlaceholder } from 'react-icons/fc';
 import PropTypes from 'prop-types';
+import { firestoreInstance } from '../../config/firebase';
+import {
+  errorNofication,
+  successNofication,
+} from '../../features/notification';
+import { storeUserInfo, userLoadingEnds } from '../../features/user';
 
 const Movie = ({ movie }) => {
-  const { info, userLoggedIn } = useSelector((state) => state.user.value);
+  const dispatch = useDispatch();
 
-  const dislikeMovie = (e) => {
+  const { info, userLoggedIn, id } = useSelector((state) => state.user.value);
+
+  const dislikeMovie = async (e) => {
     e.preventDefault();
 
-    console.log('Dislike');
+    try {
+      const userDocRef = doc(firestoreInstance, 'users', id);
+
+      await updateDoc(userDocRef, {
+        likedMovies: arrayRemove(movie.id),
+      });
+
+      const docSnap = await getDoc(userDocRef);
+
+      if (docSnap.exists()) {
+        dispatch(
+          storeUserInfo({
+            info: docSnap.data(),
+            id,
+          })
+        );
+      }
+
+      dispatch(successNofication(`disliked the movie!`));
+    } catch (err) {
+      dispatch(errorNofication(err.code.slice(5)));
+      dispatch(userLoadingEnds());
+    }
   };
 
-  const likeMovie = (e) => {
+  const likeMovie = async (e) => {
     e.preventDefault();
+    try {
+      const userDocRef = doc(firestoreInstance, 'users', id);
 
-    console.log('like', movie.id);
+      await updateDoc(userDocRef, {
+        likedMovies: arrayUnion(movie.id),
+      });
+
+      const docSnap = await getDoc(userDocRef);
+
+      if (docSnap.exists()) {
+        dispatch(
+          storeUserInfo({
+            info: docSnap.data(),
+            id,
+          })
+        );
+      }
+
+      dispatch(successNofication(`liked the movie!`));
+    } catch (err) {
+      dispatch(errorNofication(err.code.slice(5)));
+      dispatch(userLoadingEnds());
+    }
   };
 
   return (
@@ -38,9 +96,9 @@ const Movie = ({ movie }) => {
         {userLoggedIn && (
           <div className='like_or_dislike flex'>
             {info.likedMovies.includes(movie.id) ? (
-              <FcLikePlaceholder fontSize='1.3em' onClick={dislikeMovie} />
+              <FcLike fontSize='1.3em' onClick={dislikeMovie} />
             ) : (
-              <FcLike fontSize='1.3em' onClick={likeMovie} />
+              <FcLikePlaceholder fontSize='1.3em' onClick={likeMovie} />
             )}
           </div>
         )}
