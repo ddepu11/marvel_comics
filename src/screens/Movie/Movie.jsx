@@ -82,9 +82,15 @@ const Movie = ({ movie }) => {
       setLoading(false);
       dispatch(successNofication(`liked the movie!`));
     } catch (err) {
+      console.log(err);
       dispatch(errorNofication(err.code.slice(5)));
       dispatch(userLoadingEnds());
     }
+  };
+
+  const showLoginMessage = (e) => {
+    e.preventDefault();
+    dispatch(errorNofication('You must login to like movies!'));
   };
 
   return (
@@ -110,6 +116,12 @@ const Movie = ({ movie }) => {
             ) : (
               <FcLikePlaceholder fontSize='1.3em' onClick={likeMovie} />
             )}
+          </div>
+        )}
+
+        {!userLoggedIn && (
+          <div className='like_or_dislike flex'>
+            <FcLikePlaceholder fontSize='1.3em' onClick={showLoginMessage} />
           </div>
         )}
       </Link>

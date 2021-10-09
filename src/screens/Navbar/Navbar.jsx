@@ -105,8 +105,8 @@ const Navbar = () => {
               type='submit'
               fs='0.9em'
               width='100%'
-              padding='5px 10px'
-              margin='0 0 0 8px'
+              padding='4px 8px'
+              margin='0 0 0 5px'
               borderRadius='5px'
               bgColor='#eb4343'
               color='#fffbfb'
@@ -129,15 +129,16 @@ const Wrapper = styled.main`
 
   .logo {
     span {
-      font-size: 1.8em;
+      font-size: 1.5em;
       font-weight: 300;
     }
   }
 
   .search {
     input {
-      font-size: 0.9em;
+      font-size: 0.8em;
       padding: 4px 8px;
+      border-radius: 8px;
     }
   }
 
@@ -157,19 +158,21 @@ const Wrapper = styled.main`
     margin-left: 10px;
     font-weight: 500;
     color: #ffffff;
-    font-size: 1em;
+    font-size: 0.95em;
   }
 
   .links {
     position: relative;
+
     li {
-      margin-left: 5px;
+      margin-left: 4px;
       transition: all 0.4s ease;
 
       a,
       span {
         font-weight: 500;
-        padding: 5px 10px;
+        padding: 4px 8px;
+        font-size: 0.9em;
       }
     }
 

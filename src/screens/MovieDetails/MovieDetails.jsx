@@ -22,7 +22,11 @@ const MovieDetails = () => {
   const dispatch = useDispatch();
   const { id } = useParams();
 
-  const { info, id: userDocId } = useSelector((state) => state.user.value);
+  const {
+    info,
+    id: userDocId,
+    userLoggedIn,
+  } = useSelector((state) => state.user.value);
   const [loading, setLoading] = useState(true);
 
   const [movie, setMovie] = useState(null);
@@ -95,7 +99,7 @@ const MovieDetails = () => {
         dispatch(
           storeUserInfo({
             info: docSnap.data(),
-            id,
+            id: userDocId,
           })
         );
       }
@@ -126,7 +130,7 @@ const MovieDetails = () => {
         dispatch(
           storeUserInfo({
             info: docSnap.data(),
-            id,
+            id: userDocId,
           })
         );
       }
@@ -137,6 +141,10 @@ const MovieDetails = () => {
       dispatch(errorNofication(err.code.slice(5)));
       dispatch(userLoadingEnds());
     }
+  };
+
+  const showLoginMessage = () => {
+    dispatch(errorNofication('You must login to like movies!'));
   };
 
   return (
@@ -165,13 +173,24 @@ const MovieDetails = () => {
             </div>
 
             <div className='btns'>
-              <div className='like_or_dislike flex'>
-                {info.likedMovies.includes(movie.id) ? (
-                  <FcLike fontSize='1.3em' onClick={dislikeMovie} />
-                ) : (
-                  <FcLikePlaceholder fontSize='1.3em' onClick={likeMovie} />
-                )}
-              </div>
+              {userLoggedIn && (
+                <div className='like_or_dislike flex'>
+                  {info.likedMovies.includes(movie.id) ? (
+                    <FcLike fontSize='1.3em' onClick={dislikeMovie} />
+                  ) : (
+                    <FcLikePlaceholder fontSize='1.3em' onClick={likeMovie} />
+                  )}
+                </div>
+              )}
+
+              {!userLoggedIn && (
+                <div className='like_or_dislike flex'>
+                  <FcLikePlaceholder
+                    fontSize='1.3em'
+                    onClick={showLoginMessage}
+                  />
+                </div>
+              )}
             </div>
           </div>
 
