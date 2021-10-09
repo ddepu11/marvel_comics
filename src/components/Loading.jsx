@@ -1,7 +1,8 @@
 import styled from 'styled-components';
+import PropTypes from 'prop-types';
 
-const Loading = () => (
-  <Wrapper className='flex'>
+const Loading = ({ size }) => (
+  <Wrapper className='flex' size={size}>
     <div className='lds-ellipsis'>
       <div />
       <div />
@@ -10,9 +11,16 @@ const Loading = () => (
     </div>
   </Wrapper>
 );
+Loading.propTypes = {
+  size: PropTypes.string,
+};
+
+Loading.defaultProps = {
+  size: '80vh',
+};
 
 const Wrapper = styled.main`
-  height: 80vh;
+  height: ${({ size }) => size && size};
   flex-direction: column;
 
   .lds-ellipsis {
