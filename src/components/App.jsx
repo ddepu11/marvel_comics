@@ -26,11 +26,13 @@ import {
 import Loading from './Loading';
 import useNotificationOps from './useNotificationOps';
 import Signup from '../screens/Signup/Signup';
+import WatchLater from '../screens/WatchLater/WatchLater';
 import {
   clearNotification,
   errorNofication,
   successNofication,
 } from '../features/notification';
+import LikedMovies from '../screens/LikedMovies/LikedMovies';
 
 const App = () => {
   const dispatch = useDispatch();
@@ -173,6 +175,14 @@ const App = () => {
 
             <Route path='/signup' exact>
               <Signup />
+            </Route>
+
+            <Route path='/watch-later' exact>
+              <WatchLater />
+            </Route>
+
+            <Route path='/liked-movies' exact>
+              <LikedMovies />
             </Route>
 
             <Route path='/movie/:id' exact>
