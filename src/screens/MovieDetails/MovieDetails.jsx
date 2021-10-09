@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { FcLike, FcLikePlaceholder } from 'react-icons/fc';
+import { BsStopwatch, BsStopwatchFill } from 'react-icons/bs';
 import {
   doc,
   updateDoc,
@@ -143,6 +144,68 @@ const MovieDetails = () => {
     }
   };
 
+  const addToWatchLaterList = async () => {
+    console.log('Add to watch later');
+
+    setLoading(true);
+
+    try {
+      const userDocRef = doc(firestoreInstance, 'users', userDocId);
+
+      await updateDoc(userDocRef, {
+        watchLater: arrayUnion(movie.id),
+      });
+
+      const docSnap = await getDoc(userDocRef);
+
+      if (docSnap.exists()) {
+        dispatch(
+          storeUserInfo({
+            info: docSnap.data(),
+            id: userDocId,
+          })
+        );
+      }
+
+      setLoading(false);
+      dispatch(successNofication(`Saved to watch later!`));
+    } catch (err) {
+      dispatch(errorNofication(err.code.slice(5)));
+      dispatch(userLoadingEnds());
+    }
+  };
+
+  const removeFromWatchLaterList = async () => {
+    console.log('Remove from watch later');
+
+    setLoading(true);
+
+    try {
+      const userDocRef = doc(firestoreInstance, 'users', userDocId);
+
+      await updateDoc(userDocRef, {
+        watchLater: arrayRemove(movie.id),
+      });
+
+      const docSnap = await getDoc(userDocRef);
+
+      if (docSnap.exists()) {
+        dispatch(
+          storeUserInfo({
+            info: docSnap.data(),
+            id: userDocId,
+          })
+        );
+      }
+
+      setLoading(false);
+      dispatch(successNofication(`Removed from watch later!`));
+    } catch (err) {
+      dispatch(errorNofication(err.code.slice(5)));
+      dispatch(userLoadingEnds());
+    }
+  };
+
   const showLoginMessage = () => {
     dispatch(errorNofication('You must login to like movies!'));
   };
@@ -172,7 +235,7 @@ const MovieDetails = () => {
               </h2>
             </div>
 
-            <div className='btns'>
+            <div className='btns flex'>
               {userLoggedIn && (
                 <div className='like_or_dislike flex'>
                   {info.likedMovies.includes(movie.id) ? (
@@ -189,6 +252,16 @@ const MovieDetails = () => {
                     fontSize='1.3em'
                     onClick={showLoginMessage}
                   />
+                </div>
+              )}
+
+              {userLoggedIn && (
+                <div className='watch_later flex'>
+                  {info.watchLater.includes(movie.id) ? (
+                    <BsStopwatchFill onClick={removeFromWatchLaterList} />
+                  ) : (
+                    <BsStopwatch onClick={addToWatchLaterList} />
+                  )}
                 </div>
               )}
             </div>
@@ -308,7 +381,8 @@ const Wrapper = styled.main`
       .title_and_btns {
         justify-content: space-between;
         width: 96.5%;
-
+        margin-bottom: 10px;
+        
         .title {
           font-size: 1.4em;
           font-weight: 500;
@@ -316,7 +390,21 @@ const Wrapper = styled.main`
         }
 
         .btns {
+          font-size: 1.45em;
+
           .like_or_dislike:hover {
+            cursor: pointer;
+          }
+
+          .like_or_dislike {
+            margin-right: 12px;
+          }
+
+          .watch_later {
+            margin-right: 12px;
+          }
+
+          .watch_later:hover {
             cursor: pointer;
           }
         }
