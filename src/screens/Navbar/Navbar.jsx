@@ -59,6 +59,30 @@ const Navbar = () => {
           </Link>
         </li>
 
+        {userLoggedIn && (
+          <>
+            <li>
+              <Link
+                to='/liked-movies'
+                onClick={handleActiveLink}
+                className={activeLink === 'liked-movies' ? 'active' : ''}
+              >
+                liked Movies
+              </Link>
+            </li>
+
+            <li>
+              <Link
+                to='/watch-later'
+                onClick={handleActiveLink}
+                className={activeLink === 'watch-later' ? 'active' : ''}
+              >
+                Watch later
+              </Link>
+            </li>
+          </>
+        )}
+
         {!userLoggedIn && (
           <li>
             <Link
