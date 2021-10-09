@@ -77,10 +77,13 @@ const useNavbarLogic = () => {
       }
     };
 
-    document.body.addEventListener('click', clickListenerFunc);
+    const clickEvent = document.body.addEventListener(
+      'click',
+      clickListenerFunc
+    );
 
     return () => {
-      document.removeEventListener('click', clickListenerFunc);
+      window.removeEventListener('click', clickEvent);
     };
   }, []);
 
