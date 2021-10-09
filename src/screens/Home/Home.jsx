@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import styled from 'styled-components';
-// import { storeMovies } from '../../features/movies';
 import { errorNofication } from '../../features/notification';
 import Loading from '../../components/Loading';
 import Movie from '../Movie/Movie';
@@ -24,12 +23,6 @@ const Home = () => {
 
   useEffect(() => {
     let mounted = true;
-
-    // if (currentGenereId && page > 1) {
-    //   console.log('Genere');
-    //   setMovies([]);
-    //   setPage(1);
-    // }
 
     const fetchData = async () => {
       setLoading(true);
