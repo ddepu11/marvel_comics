@@ -1,13 +1,31 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import { FcLike, FcLikePlaceholder } from 'react-icons/fc';
+import {
+  doc,
+  updateDoc,
+  arrayRemove,
+  getDoc,
+  arrayUnion,
+} from 'firebase/firestore';
 import styled from 'styled-components';
 import Loading from '../../components/Loading';
+import { firestoreInstance } from '../../config/firebase';
+import { storeUserInfo, userLoadingEnds } from '../../features/user';
+import {
+  errorNofication,
+  successNofication,
+} from '../../features/notification';
 
 const MovieDetails = () => {
+  const dispatch = useDispatch();
   const { id } = useParams();
 
-  const [movie, setMovie] = useState(null);
+  const { info, id: userDocId } = useSelector((state) => state.user.value);
   const [loading, setLoading] = useState(true);
+
+  const [movie, setMovie] = useState(null);
   const apiKey = process.env.TMDB_API_KEY;
 
   useEffect(() => {
@@ -59,6 +77,68 @@ const MovieDetails = () => {
     runtime = `${hours}h ${runtime}`;
   }
 
+  const dislikeMovie = async (e) => {
+    e.preventDefault();
+
+    setLoading(true);
+
+    try {
+      const userDocRef = doc(firestoreInstance, 'users', userDocId);
+
+      await updateDoc(userDocRef, {
+        likedMovies: arrayRemove(movie.id),
+      });
+
+      const docSnap = await getDoc(userDocRef);
+
+      if (docSnap.exists()) {
+        dispatch(
+          storeUserInfo({
+            info: docSnap.data(),
+            id,
+          })
+        );
+      }
+
+      setLoading(false);
+      dispatch(successNofication(`disliked the movie!`));
+    } catch (err) {
+      dispatch(errorNofication(err.code.slice(5)));
+      dispatch(userLoadingEnds());
+    }
+  };
+
+  const likeMovie = async (e) => {
+    e.preventDefault();
+
+    setLoading(true);
+
+    try {
+      const userDocRef = doc(firestoreInstance, 'users', userDocId);
+
+      await updateDoc(userDocRef, {
+        likedMovies: arrayUnion(movie.id),
+      });
+
+      const docSnap = await getDoc(userDocRef);
+
+      if (docSnap.exists()) {
+        dispatch(
+          storeUserInfo({
+            info: docSnap.data(),
+            id,
+          })
+        );
+      }
+
+      setLoading(false);
+      dispatch(successNofication(`liked the movie!`));
+    } catch (err) {
+      dispatch(errorNofication(err.code.slice(5)));
+      dispatch(userLoadingEnds());
+    }
+  };
+
   return (
     <Wrapper>
       <div className='banner'>
@@ -84,7 +164,15 @@ const MovieDetails = () => {
               </h2>
             </div>
 
-            <div className='btns'>s</div>
+            <div className='btns'>
+              <div className='like_or_dislike flex'>
+                {info.likedMovies.includes(movie.id) ? (
+                  <FcLike fontSize='1.3em' onClick={dislikeMovie} />
+                ) : (
+                  <FcLikePlaceholder fontSize='1.3em' onClick={likeMovie} />
+                )}
+              </div>
+            </div>
           </div>
 
           <p className='overview'>Overview:&nbsp;&nbsp;{movie.overview}</p>
@@ -209,6 +297,9 @@ const Wrapper = styled.main`
         }
 
         .btns {
+          .like_or_dislike:hover {
+            cursor: pointer;
+          }
         }
       }
 
