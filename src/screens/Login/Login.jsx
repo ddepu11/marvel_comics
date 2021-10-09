@@ -18,6 +18,8 @@ const Login = () => {
   return (
     <Wrapper className='flex'>
       <div className='center_box'>
+        <h3 className='heading'>Log in to Movies DB</h3>
+
         <form onSubmit={handleSubmit}>
           <div className='row'>
             <FormControl
@@ -113,6 +115,13 @@ const Wrapper = styled.main`
     box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px,
       rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
     padding: 20px 50px;
+
+    .heading {
+      text-align: center;
+      font-size: 1.1em;
+      font-weight: 400;
+      padding: 4px 0 15px;
+    }
   }
 
   .or_row {
