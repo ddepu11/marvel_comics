@@ -500,7 +500,8 @@ const Wrapper = styled.main`
             right: 0;
             z-index: 2;
             background: #2da8ce;
-            width: 200px;
+            width: 220px;
+            max-height: 400px;
             padding: 8px 10px;
             border-radius: 10px;
             flex-direction: column;
@@ -512,8 +513,9 @@ const Wrapper = styled.main`
             span {
               width: 100%;
               padding: 8px;
-              font-size: 0.8em;
+              font-size: 0.7em;
             }
+
             span:hover {
               background-color: #fff;
               color: black;
