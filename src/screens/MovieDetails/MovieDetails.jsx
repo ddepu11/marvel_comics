@@ -23,7 +23,7 @@ import {
 import styled from 'styled-components';
 import Loading from '../../components/Loading';
 import { firestoreInstance } from '../../config/firebase';
-import { storeUserInfo, userLoadingEnds } from '../../features/user';
+import { storeUserInfo } from '../../features/user';
 import Button from '../../components/Button';
 import {
   errorNofication,
@@ -54,6 +54,7 @@ const MovieDetails = () => {
   const [movie, setMovie] = useState(null);
   const [video, setVideo] = useState({ play: false, id: null });
   const apiKey = process.env.TMDB_API_KEY;
+  const didMount = useRef(true);
 
   useEffect(() => {
     let mounted = true;
@@ -83,6 +84,7 @@ const MovieDetails = () => {
 
     return () => {
       mounted = false;
+      didMount.current = false;
     };
   }, [id, movie, apiKey]);
 
@@ -118,6 +120,7 @@ const MovieDetails = () => {
 
     return () => {
       window.removeEventListener('click', clickEvent);
+      didMount.current = false;
     };
   }, []);
 
@@ -141,7 +144,7 @@ const MovieDetails = () => {
   const dislikeMovie = async (e) => {
     e.preventDefault();
 
-    setLoading(true);
+    if (didMount.current) setLoading(true);
 
     try {
       const userDocRef = doc(firestoreInstance, 'users', userDocId);
@@ -161,18 +164,18 @@ const MovieDetails = () => {
         );
       }
 
-      setLoading(false);
+      if (didMount.current) setLoading(false);
       dispatch(successNofication(`disliked the movie!`));
     } catch (err) {
       dispatch(errorNofication(err.code.slice(5)));
-      dispatch(userLoadingEnds());
+      if (didMount.current) setLoading(false);
     }
   };
 
   const likeMovie = async (e) => {
     e.preventDefault();
 
-    setLoading(true);
+    if (didMount.current) setLoading(true);
 
     try {
       const userDocRef = doc(firestoreInstance, 'users', userDocId);
@@ -192,16 +195,17 @@ const MovieDetails = () => {
         );
       }
 
-      setLoading(false);
+      if (didMount.current) setLoading(false);
+
       dispatch(successNofication(`liked the movie!`));
     } catch (err) {
       dispatch(errorNofication(err.code.slice(5)));
-      dispatch(userLoadingEnds());
+      if (didMount.current) setLoading(false);
     }
   };
 
   const addToWatchLaterList = async () => {
-    setLoading(true);
+    if (didMount.current) setLoading(true);
 
     try {
       const userDocRef = doc(firestoreInstance, 'users', userDocId);
@@ -221,16 +225,16 @@ const MovieDetails = () => {
         );
       }
 
-      setLoading(false);
+      if (didMount.current) setLoading(false);
       dispatch(successNofication(`Saved to watch later!`));
     } catch (err) {
       dispatch(errorNofication(err.code.slice(5)));
-      dispatch(userLoadingEnds());
+      if (didMount.current) setLoading(false);
     }
   };
 
   const removeFromWatchLaterList = async () => {
-    setLoading(true);
+    if (didMount.current) setLoading(true);
 
     try {
       const userDocRef = doc(firestoreInstance, 'users', userDocId);
@@ -254,7 +258,7 @@ const MovieDetails = () => {
       dispatch(successNofication(`Removed from watch later!`));
     } catch (err) {
       dispatch(errorNofication(err.code.slice(5)));
-      dispatch(userLoadingEnds());
+      setLoading(false);
     }
   };
 
@@ -263,7 +267,6 @@ const MovieDetails = () => {
   };
 
   // Video player
-
   const opts = {
     height: '600',
     width: '1200',
@@ -306,8 +309,6 @@ const MovieDetails = () => {
           setPlaylists(newPlaylists);
 
           setDropDownLoading(false);
-
-          console.log(newPlaylists);
         }
 
         index += 1;
@@ -326,6 +327,7 @@ const MovieDetails = () => {
 
   const showPlaylistDropDown = () => {
     setDropDownLoading(true);
+
     playListDropDown.current.classList.add('show');
 
     fetchUserPlaylist();
@@ -350,6 +352,7 @@ const MovieDetails = () => {
       setDropDownLoading(false);
     } else {
       closeCreatePlaylistDialog();
+
       try {
         await addDoc(collection(firestoreInstance, 'playlists'), {
           userId: userDocId,
@@ -520,17 +523,19 @@ const MovieDetails = () => {
                 </Button>
               )}
 
-              <Button
-                type='button'
-                dataVal='addToPlaylist'
-                bgColor='transparent'
-                handleClick={showPlaylistDropDown}
-                transform='scale(1)'
-              >
-                <CgPlayListAdd
-                  style={{ pointerEvents: 'none', fontSize: '1.45em' }}
-                />
-              </Button>
+              {userLoggedIn && (
+                <Button
+                  type='button'
+                  dataVal='addToPlaylist'
+                  bgColor='transparent'
+                  handleClick={showPlaylistDropDown}
+                  transform='scale(1)'
+                >
+                  <CgPlayListAdd
+                    style={{ pointerEvents: 'none', fontSize: '1.45em' }}
+                  />
+                </Button>
+              )}
 
               <VideosDropDown
                 className='videos_dropdown flex'
