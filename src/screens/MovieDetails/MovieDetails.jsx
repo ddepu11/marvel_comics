@@ -1,8 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { FcLike, FcLikePlaceholder } from 'react-icons/fc';
+import { FaPlay } from 'react-icons/fa';
 import { BsStopwatch, BsStopwatchFill } from 'react-icons/bs';
+import YouTube from 'react-youtube';
 import {
   doc,
   updateDoc,
@@ -14,6 +16,7 @@ import styled from 'styled-components';
 import Loading from '../../components/Loading';
 import { firestoreInstance } from '../../config/firebase';
 import { storeUserInfo, userLoadingEnds } from '../../features/user';
+import Button from '../../components/Button';
 import {
   errorNofication,
   successNofication,
@@ -31,8 +34,9 @@ const MovieDetails = () => {
   } = useSelector((state) => state.user.value);
 
   const [loading, setLoading] = useState(true);
-
+  const videosDropDown = useRef(null);
   const [movie, setMovie] = useState(null);
+  const [play, setPlay] = useState(false);
   const apiKey = process.env.TMDB_API_KEY;
 
   useEffect(() => {
@@ -49,7 +53,6 @@ const MovieDetails = () => {
         if (data && mounted) {
           setMovie(data);
           setLoading(false);
-          console.log(data);
         } else if (mounted) {
           setLoading(false);
         }
@@ -66,6 +69,21 @@ const MovieDetails = () => {
       mounted = false;
     };
   }, [id, movie, apiKey]);
+
+  // hide video drop  down
+  useEffect(() => {
+    const clickListenerFunc = (e) => {
+      if (!e.target.hasAttribute('data-value') && videosDropDown.current) {
+        videosDropDown.current.classList.remove('show');
+      }
+    };
+
+    document.body.addEventListener('click', clickListenerFunc);
+
+    return () => {
+      document.removeEventListener('click', clickListenerFunc);
+    };
+  }, []);
 
   if (loading) {
     return <Loading />;
@@ -208,8 +226,32 @@ const MovieDetails = () => {
     dispatch(errorNofication('You must login to like movies!'));
   };
 
+  // Video player
+
+  const opts = {
+    height: '390',
+    width: '640',
+    playerVars: {
+      // https://developers.google.com/youtube/player_parameters
+      autoplay: 1,
+    },
+  };
+
+  const handleOnReady = () => {
+    // e.target.pauseVideo();
+  };
+
+  const showVideoDropDown = () => {
+    videosDropDown.current.classList.add('show');
+  };
+
   return (
     <Wrapper>
+      {play && (
+        <PlayerWrapper>
+          <YouTube videoId='BaVa3myLuWk' opts={opts} onReady={handleOnReady} />;
+        </PlayerWrapper>
+      )}
       <div className='banner'>
         <img
           src={`https://image.tmdb.org/t/p/original/${
@@ -217,6 +259,7 @@ const MovieDetails = () => {
           }`}
           alt='/'
         />
+
         {movie.tagline && (
           <div className='tagline'>
             <span>{movie.tagline}</span>
@@ -262,6 +305,31 @@ const MovieDetails = () => {
                   )}
                 </div>
               )}
+
+              {movie.videos && (
+                <Button
+                  type='button'
+                  dataVal='playBtn'
+                  bgColor='transparent'
+                  handleClick={showVideoDropDown}
+                >
+                  <FaPlay
+                    className='play_btns'
+                    style={{ pointerEvents: 'none' }}
+                  />
+                </Button>
+              )}
+
+              <div className='videos_dropdown flex' ref={videosDropDown}>
+                {movie.videos.results !== 0 &&
+                  movie.videos.results.map((item) => (
+                    <span key={item.id} data-id={item.key}>
+                      {item.type}
+                    </span>
+                  ))}
+              </div>
+
+              {/* ssss */}
             </div>
           </div>
 
@@ -389,6 +457,7 @@ const Wrapper = styled.main`
 
         .btns {
           font-size: 1.45em;
+          position: relative;
 
           .like_or_dislike:hover {
             cursor: pointer;
@@ -404,6 +473,46 @@ const Wrapper = styled.main`
 
           .watch_later:hover {
             cursor: pointer;
+          }
+
+          .play_btns:hover {
+            cursor: pointer;
+          }
+
+          width: 20%;
+
+          .videos_dropdown {
+            position: absolute;
+            bottom: 120%;
+            left: 0;
+            z-index: 2;
+            background: #2da8ce;
+            width: 200px;
+            padding: 5px 10px;
+            border-radius: 10px;
+            flex-direction: column;
+            align-items: flex-start;
+            overflow-y: scroll;
+            opacity: 0;
+            pointer-events: none;
+
+            span {
+              width: 100%;
+              padding: 5px;
+              font-size: 0.8em;
+            }
+            span:hover {
+              background-color: #fff;
+              color: black;
+              font-weight: 400;
+              border-radius: 4px;
+              cursor: pointer;
+            }
+          }
+
+          .videos_dropdown.show {
+            opacity: 0.95;
+            pointer-events: all;
           }
         }
       }
@@ -473,6 +582,18 @@ const Wrapper = styled.main`
       }
     }
   }
+`;
+
+const PlayerWrapper = styled.main`
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  display: grid;
+  place-content: center;
+  background: rgba(0, 0, 0, 0.9);
+  z-index: 9;
 `;
 
 export default MovieDetails;
