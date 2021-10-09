@@ -44,6 +44,7 @@ const useNavbarLogic = () => {
   const mounted = useRef(true);
   const genreDropDown = useRef(null);
 
+  // Fetch generes
   useEffect(() => {
     const fetchGeneres = async () => {
       try {
@@ -68,6 +69,7 @@ const useNavbarLogic = () => {
     };
   }, [apiEndPoint, dispatch, genres]);
 
+  // Hide dropdowns when click elsewhere
   useEffect(() => {
     const clickListenerFunc = (e) => {
       if (!e.target.matches('.GEN') && genreDropDown.current) {
