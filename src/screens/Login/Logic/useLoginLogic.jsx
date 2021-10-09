@@ -73,8 +73,8 @@ const useLoginLogic = () => {
 
     signInWithPopup(authInstance, provider)
       .then(() => {})
-      .catch(() => {
-        dispatch(errorNofication('Account exists with different credentials!'));
+      .catch((err) => {
+        dispatch(errorNofication(err.code.slice(5)));
         dispatch(userLoadingEnds());
       });
   };
