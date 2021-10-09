@@ -21,6 +21,7 @@ import {
 
 const MovieDetails = () => {
   const dispatch = useDispatch();
+
   const { id } = useParams();
 
   const {
@@ -28,6 +29,7 @@ const MovieDetails = () => {
     id: userDocId,
     userLoggedIn,
   } = useSelector((state) => state.user.value);
+
   const [loading, setLoading] = useState(true);
 
   const [movie, setMovie] = useState(null);
@@ -145,8 +147,6 @@ const MovieDetails = () => {
   };
 
   const addToWatchLaterList = async () => {
-    console.log('Add to watch later');
-
     setLoading(true);
 
     try {
@@ -176,8 +176,6 @@ const MovieDetails = () => {
   };
 
   const removeFromWatchLaterList = async () => {
-    console.log('Remove from watch later');
-
     setLoading(true);
 
     try {
@@ -382,7 +380,7 @@ const Wrapper = styled.main`
         justify-content: space-between;
         width: 96.5%;
         margin-bottom: 10px;
-        
+
         .title {
           font-size: 1.4em;
           font-weight: 500;
