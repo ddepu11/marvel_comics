@@ -81,7 +81,7 @@ const App = () => {
           dispatch(storeUserInfo({ info: doc.data(), id: doc.id }));
         });
       } catch (err) {
-        dispatch(errorNofication(err.code));
+        dispatch(errorNofication(err.code.slice(5)));
         dispatch(userLoadingEnds());
       }
     };
@@ -105,7 +105,7 @@ const App = () => {
           dispatch(userLoadingEnds());
         }
       } catch (err) {
-        dispatch(errorNofication(err.code));
+        dispatch(errorNofication(err.code.slice(5)));
         dispatch(userLoadingEnds());
       }
     };
@@ -125,7 +125,7 @@ const App = () => {
           fetchUserData(userInfo.email);
         }
       } catch (err) {
-        dispatch(errorNofication(err.code));
+        dispatch(errorNofication(err.code.slice(5)));
         dispatch(userLoadingEnds());
       }
     };
