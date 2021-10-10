@@ -347,7 +347,7 @@ const MovieDetails = () => {
     if (playlist === '') {
       alert('Input cant be empty');
       setDropDownLoading(false);
-    } else if (playlist.length > 20) {
+    } else if (playlist.length > 25) {
       alert('playlists name is too long!');
       setDropDownLoading(false);
     } else {
