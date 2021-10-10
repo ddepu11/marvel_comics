@@ -39,3 +39,14 @@
 - validator
 - Eslint
 - Prettier
+
+## Screenshots
+
+![Desktop 1](https://github.com/ddepu11/movies-db/blob/master/screenschots/1.png)
+![Desktop 2](https://github.com/ddepu11/movies-db/blob/master/screenschots/2.png)
+![Desktop 3](https://github.com/ddepu11/movies-db/blob/master/screenschots/3.png)
+![Desktop 4](https://github.com/ddepu11/movies-db/blob/master/screenschots/4.png)
+![Desktop 5](https://github.com/ddepu11/movies-db/blob/master/screenschots/5.png)
+![Desktop 6](https://github.com/ddepu11/movies-db/blob/master/screenschots/6.png)
+![Desktop 7](https://github.com/ddepu11/movies-db/blob/master/screenschots/7.png)
+![Desktop 8](https://github.com/ddepu11/movies-db/blob/master/screenschots/8.png)
