@@ -13,6 +13,7 @@ const Login = () => {
     handleLoginViaTwitter,
     emailValidationMessageTag,
     passwordValidationMessageTag,
+    loginAsRandomUser,
   } = useLoginLogic();
 
   return (
@@ -70,6 +71,21 @@ const Login = () => {
             transform=''
           >
             Login
+          </Button>
+
+          <Button
+            type='button'
+            fs='0.9em'
+            width='100%'
+            margin='25px 0 0 0'
+            padding='5px 0px'
+            borderRadius='5px'
+            bgColor='#d8d6d6'
+            color='#000'
+            transform=''
+            handleClick={loginAsRandomUser}
+          >
+            Login as ranom user
           </Button>
         </form>
 

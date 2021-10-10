@@ -79,6 +79,32 @@ const useLoginLogic = () => {
       });
   };
 
+  const loginAsRandomUser = () => {
+    dispatch(userLoadingBegins());
+
+    const users = [
+      { email: 'mohan11@gmail.com', password: 'aaaaaa' },
+      { email: 'sohan11@gmail.com', password: 'aaaaaa' },
+      { email: 'abhi11@gmail.com', password: 'aaaaaa' },
+      { email: 'mukesh11@gmail.com', password: 'aaaaaa' },
+      { email: 'ramesh11@gmail.com', password: 'aaaaaa' },
+      { email: 'kamlesh11@gmail.com', password: 'aaaaaa' },
+    ];
+
+    const randomUser = users[Math.floor(Math.random() * users.length)];
+
+    signInWithEmailAndPassword(
+      authInstance,
+      randomUser.email,
+      randomUser.password
+    )
+      .then(() => {})
+      .catch((err) => {
+        dispatch(errorNofication(err.code.slice(5)));
+        dispatch(userLoadingEnds());
+      });
+  };
+
   return {
     handleInput,
     credentials,
@@ -86,6 +112,7 @@ const useLoginLogic = () => {
     handleLoginViaTwitter,
     emailValidationMessageTag,
     passwordValidationMessageTag,
+    loginAsRandomUser,
   };
 };
 
