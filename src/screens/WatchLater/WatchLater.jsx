@@ -17,7 +17,7 @@ const WatchLater = () => {
   const apiKey = process.env.TMDB_API_KEY;
 
   useEffect(() => {
-    if (userLoggedIn && info.watchLater.length !== 0) {
+    if (userLoggedIn) {
       setLoading(true);
 
       const newMovies = [];
@@ -41,6 +41,11 @@ const WatchLater = () => {
           setLoading(false);
         }
       });
+
+      if (info.watchLater.length === 0) {
+        setMovies([]);
+        setLoading(false);
+      }
     } else {
       setMovies([]);
     }

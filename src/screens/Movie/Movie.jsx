@@ -57,6 +57,7 @@ const Movie = ({ movie }) => {
       }
 
       if (mounted.current) setLoading(false);
+
       dispatch(successNofication(`disliked the movie!`));
     } catch (err) {
       dispatch(errorNofication(err.code.slice(5)));

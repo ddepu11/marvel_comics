@@ -34,6 +34,7 @@ import {
 } from '../features/notification';
 import LikedMovies from '../screens/LikedMovies/LikedMovies';
 import Error from '../screens/Error';
+import Playlists from '../screens/Playlists/Playlists';
 
 const App = () => {
   const dispatch = useDispatch();
@@ -187,6 +188,10 @@ const App = () => {
 
             <Route path='/liked-movies' exact>
               <LikedMovies />
+            </Route>
+
+            <Route path='/playlists' exact>
+              <Playlists />
             </Route>
 
             <Route path='/movie/:id' exact>

@@ -107,6 +107,18 @@ const Navbar = () => {
           </li>
         )}
 
+        {userLoggedIn && (
+          <li>
+            <Link
+              to='/playlists'
+              onClick={handleActiveLink}
+              className={activeLink === 'playlists' ? 'active' : ''}
+            >
+              Playlists
+            </Link>
+          </li>
+        )}
+
         <li
           className='genere'
           onClick={() => genreDropDown.current.classList.add('show')}
@@ -220,6 +232,7 @@ const Wrapper = styled.main`
   .genere_dropdown {
     position: absolute;
     top: 120%;
+    right: 0;
     z-index: 2;
     background: #2da8ce;
     width: 200px;

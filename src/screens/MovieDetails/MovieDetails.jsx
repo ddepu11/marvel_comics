@@ -144,7 +144,7 @@ const MovieDetails = () => {
   const dislikeMovie = async (e) => {
     e.preventDefault();
 
-    if (didMount.current) setLoading(true);
+    setLoading(true);
 
     try {
       const userDocRef = doc(firestoreInstance, 'users', userDocId);
@@ -164,18 +164,18 @@ const MovieDetails = () => {
         );
       }
 
-      if (didMount.current) setLoading(false);
+      setLoading(false);
       dispatch(successNofication(`disliked the movie!`));
     } catch (err) {
       dispatch(errorNofication(err.code.slice(5)));
-      if (didMount.current) setLoading(false);
+      setLoading(false);
     }
   };
 
   const likeMovie = async (e) => {
     e.preventDefault();
 
-    if (didMount.current) setLoading(true);
+    setLoading(true);
 
     try {
       const userDocRef = doc(firestoreInstance, 'users', userDocId);
@@ -195,17 +195,17 @@ const MovieDetails = () => {
         );
       }
 
-      if (didMount.current) setLoading(false);
+      setLoading(false);
 
       dispatch(successNofication(`liked the movie!`));
     } catch (err) {
       dispatch(errorNofication(err.code.slice(5)));
-      if (didMount.current) setLoading(false);
+      setLoading(false);
     }
   };
 
   const addToWatchLaterList = async () => {
-    if (didMount.current) setLoading(true);
+    setLoading(true);
 
     try {
       const userDocRef = doc(firestoreInstance, 'users', userDocId);
@@ -225,16 +225,16 @@ const MovieDetails = () => {
         );
       }
 
-      if (didMount.current) setLoading(false);
+      setLoading(false);
       dispatch(successNofication(`Saved to watch later!`));
     } catch (err) {
       dispatch(errorNofication(err.code.slice(5)));
-      if (didMount.current) setLoading(false);
+      setLoading(false);
     }
   };
 
   const removeFromWatchLaterList = async () => {
-    if (didMount.current) setLoading(true);
+    setLoading(true);
 
     try {
       const userDocRef = doc(firestoreInstance, 'users', userDocId);
@@ -388,13 +388,9 @@ const MovieDetails = () => {
             });
 
             fetchUserPlaylist();
-            dispatch(successNofication(`Added to playlist!`));
+            playListDropDown.current.classList.remove('show');
 
-            // const pSnap = await getDoc(playlistDocRef);
-            // if (pSnap.exists()) {
-            //   setPlaylists({ ...pSnap.data(), id: pSnap.id });
-            //   setDropDownLoading(false);
-            // }
+            dispatch(successNofication(`Added to playlist!`));
           } catch (err) {
             dispatch(errorNofication(err.code.slice(5)));
             setDropDownLoading(false);
