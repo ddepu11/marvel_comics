@@ -1,9 +1,8 @@
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
-import { collection, where, getDocs, query } from 'firebase/firestore';
+import { collection, where, query, onSnapshot } from 'firebase/firestore';
 import { firestoreInstance } from '../../config/firebase';
-import { errorNofication } from '../../features/notification';
 import Loading from '../../components/Loading';
 import Playlist from './Playlist/Playlist';
 
@@ -20,52 +19,44 @@ const Playlists = () => {
   useEffect(() => {
     let mounted = true;
 
-    const fetchUserPlaylist = async () => {
-      if (mounted) setLoading(true);
+    if (mounted) setLoading(true);
 
-      try {
-        const playlistRef = collection(firestoreInstance, 'playlists');
+    const q = query(
+      collection(firestoreInstance, 'playlists'),
+      where('userId', '==', id)
+    );
 
-        const q = query(playlistRef, where('userId', '==', id));
+    const unsubscribe = onSnapshot(q, (playlistSnap) => {
+      const newPlaylists = [];
+      let index = 0;
 
-        const querySnapshot = await getDocs(q);
-
-        let index = 0;
-        const newPlaylists = [];
-
-        querySnapshot.forEach(async (p) => {
-          newPlaylists.push({
-            ...p.data(),
-            id: p.id,
-          });
-
-          if (querySnapshot.size - 1 === index) {
-            if (mounted) {
-              setPlaylists(newPlaylists);
-              setLoading(false);
-            }
-          }
-
-          index += 1;
+      playlistSnap.forEach((p) => {
+        newPlaylists.push({
+          ...p.data(),
+          id: p.id,
         });
 
-        if (querySnapshot.size === 0) {
+        if (playlistSnap.size - 1 === index) {
           if (mounted) {
-            setPlaylists([]);
-
+            setPlaylists(newPlaylists);
             setLoading(false);
           }
         }
-      } catch (err) {
-        dispatch(errorNofication(err.code.slice(5)));
-        if (mounted) setLoading(false);
-      }
-    };
 
-    fetchUserPlaylist();
+        index += 1;
+      });
+
+      if (playlistSnap.size === 0) {
+        if (mounted) {
+          setPlaylists([]);
+          setLoading(false);
+        }
+      }
+    });
 
     return () => {
       mounted = false;
+      unsubscribe();
     };
   }, [dispatch, id, apiKey]);
 
