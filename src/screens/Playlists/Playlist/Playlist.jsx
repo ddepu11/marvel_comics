@@ -4,11 +4,12 @@ import { useState, useEffect } from 'react';
 import { AiFillDelete } from 'react-icons/ai';
 import { doc, updateDoc, arrayRemove } from 'firebase/firestore';
 import { useDispatch } from 'react-redux';
-import Loading from '../../../components/Loading';
 import Movie from '../../Movie/Movie';
 import Button from '../../../components/Button';
 import { firestoreInstance } from '../../../config/firebase';
 import { errorNofication } from '../../../features/notification';
+import EditPlaylist from './EditPlaylist';
+import CircleLoader from '../../../components/CircleLoader';
 
 const Playlist = ({ item, index }) => {
   const dispatch = useDispatch();
@@ -72,35 +73,42 @@ const Playlist = ({ item, index }) => {
     }
   };
 
-  if (loading) {
-    return <Loading size='4vh' />;
-  }
+  // if (!loading) {
+  //   return <Loading size='4vh' />;
+  // }
 
   return (
     <Wrapper>
-      <h2 className='name'>
-        {index + 1}.&nbsp;
-        {item.name}
-      </h2>
+      <EditPlaylist
+        index={index}
+        playlistName={item.name}
+        playlistId={item.id}
+      />
 
       {movies.length !== 0 ? (
         <div className='movies'>
-          {movies.map((m) => (
-            <div className='movie' key={m.id}>
-              <Button
-                type='button'
-                bgColor='transparent'
-                fs='1.5em'
-                color='#bd2222'
-                dataVal={m.id.toString()}
-                handleClick={removeFromPlaylist}
-              >
-                <AiFillDelete style={{ pointerEvents: 'none' }} />
-              </Button>
+          {movies.map((m) => {
+            if (!loading) {
+              return <CircleLoader key={m.id} />;
+            }
 
-              <Movie movie={m} />
-            </div>
-          ))}
+            return (
+              <div className='movie' key={m.id}>
+                <Button
+                  type='button'
+                  bgColor='transparent'
+                  fs='1.5em'
+                  color='#bd2222'
+                  dataVal={m.id.toString()}
+                  handleClick={removeFromPlaylist}
+                >
+                  <AiFillDelete style={{ pointerEvents: 'none' }} />
+                </Button>
+
+                <Movie movie={m} />
+              </div>
+            );
+          })}
         </div>
       ) : (
         <h2 className='no_movies'>you haven&rsquo;t added any movie yet!</h2>
@@ -112,12 +120,6 @@ const Playlist = ({ item, index }) => {
 const Wrapper = styled.main`
   margin-bottom: 30px;
   padding-bottom: 10px;
-
-  .name {
-    font-weight: 400;
-    font-size: 1.8em;
-    padding: 10px 0;
-  }
 
   .movies {
     display: flex;
