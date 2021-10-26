@@ -12,6 +12,7 @@ import {
   moviesError,
   moviesLoadingBegins,
   setApiEndPointAndGenere,
+  setChangeHappened,
   storeGenres,
   storeMovies,
 } from '../../../features/movies';
@@ -101,9 +102,31 @@ const useNavbarLogic = () => {
     const endPoint = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&language=en-IND&sort_by=popularity.desc&include_adult=false&include_video=true&page=1&with_watch_monetization_types=flatrate&with_genres=${id}`;
 
     dispatch(setApiEndPointAndGenere({ endPoint, genereId: id }));
+
+    setTimeout(() => {
+      dispatch(setChangeHappened(true));
+    }, 1000);
   };
 
   const [keyword, setKeyword] = useState('');
+
+  const handleClickOnLogo = () => {
+    setActiveLink('/');
+    setKeyword('');
+
+    const endPointforPopularMovies = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&language=en-IND&sort_by=popularity.desc&include_adult=false&include_video=true&with_watch_monetization_types=flatrate`;
+
+    dispatch(
+      setApiEndPointAndGenere({
+        endPoint: endPointforPopularMovies,
+        genereId: null,
+      })
+    );
+
+    setTimeout(() => {
+      dispatch(setChangeHappened(true));
+    }, 2000);
+  };
 
   const handleKeyword = async (e) => {
     const { value } = e.target;
@@ -122,28 +145,15 @@ const useNavbarLogic = () => {
 
         const { results } = await response.json();
 
+        dispatch(setChangeHappened(true));
+
         dispatch(storeMovies(results));
       } catch (err) {
         dispatch(moviesError());
       }
     } else {
-      dispatch(storeMovies([]));
+      handleClickOnLogo();
     }
-  };
-
-  const handleClickOnLogo = () => {
-    setActiveLink('/');
-    setKeyword('');
-    dispatch(storeMovies([]));
-
-    const endPointforPopularMovies = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&language=en-IND&sort_by=popularity.desc&include_adult=false&include_video=true&with_watch_monetization_types=flatrate`;
-
-    dispatch(
-      setApiEndPointAndGenere({
-        endPoint: endPointforPopularMovies,
-        genereId: null,
-      })
-    );
   };
 
   const handleLogOut = () => {

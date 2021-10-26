@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { errorNofication } from '../../features/notification';
 import Loading from '../../components/Loading';
 import Movie from '../Movie/Movie';
+import { setChangeHappened, storeMovies } from '../../features/movies';
 
 const Home = () => {
   const dispatch = useDispatch();
@@ -19,8 +20,6 @@ const Home = () => {
     movies: globalMovies,
   } = useSelector((state) => state.movies.value);
 
-  const [movies, setMovies] = useState([]);
-
   useEffect(() => {
     let mounted = true;
 
@@ -32,7 +31,7 @@ const Home = () => {
         const { results } = await response.json();
 
         if (mounted) {
-          setMovies((prevMovies) => [...prevMovies, ...results]);
+          dispatch(storeMovies(results));
           setLoading(false);
         }
       } catch (err) {
@@ -49,7 +48,9 @@ const Home = () => {
   }, [apiEndPoint, dispatch, page, currentGenereId]);
 
   // The innerHeight property returns the height of a window's content area.
+
   // The scrollHeight property returns the entire height of an element in pixels, including padding, but not the       border, scrollbar or margin.
+
   // The read-only scrollY property of the Window interface returns the number of pixels that the document is currently scrolled vertically.
 
   useEffect(() => {
@@ -58,9 +59,10 @@ const Home = () => {
     const scrollEvent = window.addEventListener('scroll', () => {
       const ineerHeightPlusScrollY = window.innerHeight + window.scrollY;
 
+      // globalMovies.length === 0 &&
+
       if (
         !loading &&
-        globalMovies.length === 0 &&
         ineerHeightPlusScrollY >= document.body.scrollHeight - 100
       ) {
         if (mounted) {
@@ -75,6 +77,18 @@ const Home = () => {
       window.removeEventListener('scroll', scrollEvent);
     };
   }, [apiEndPoint, loading, globalMovies.length]);
+
+  const [newMovies, setNewMovies] = useState([]);
+  const { movies, changeHappened } = useSelector((state) => state.movies.value);
+
+  useEffect(() => {
+    if (changeHappened) {
+      setNewMovies(movies);
+      dispatch(setChangeHappened(false));
+    } else {
+      setNewMovies((prevMovies) => [...prevMovies, ...movies]);
+    }
+  }, [movies, changeHappened, dispatch]);
 
   if (movieLoading) {
     return <Loading />;
@@ -100,9 +114,11 @@ const Home = () => {
           : 'Popular movies:'}
       </div>
 
-      {movies.length !== 0 && globalMovies.length === 0 && (
+      {/* && globalMovies.length === 0 */}
+
+      {newMovies.length !== 0 && (
         <div className='movies '>
-          {movies.map((item) => (
+          {newMovies.map((item) => (
             <Movie
               movie={item}
               key={Math.floor(Math.random() * item.id * Date.now())}
@@ -115,7 +131,7 @@ const Home = () => {
         <h1 className='no_movies'>Sorry there are no movies to show!</h1>
       ) */}
 
-      {globalMovies.length !== 0 && (
+      {/* {globalMovies.length !== 0 && (
         <div className='movies '>
           {globalMovies.map((item) => (
             <Movie
@@ -124,7 +140,7 @@ const Home = () => {
             />
           ))}
         </div>
-      )}
+      )} */}
 
       {loading && <Loading size='20vh' />}
     </Wrapper>
