@@ -88,8 +88,18 @@ const Playlist = ({ item, index }) => {
       {movies.length !== 0 ? (
         <div className='movies'>
           {movies.map((m) => {
-            if (!loading) {
-              return <CircleLoader key={m.id} />;
+            if (loading) {
+              return (
+                <CircleLoader
+                  key={m.id}
+                  wrapperH='200px'
+                  wrapperMargin='10px 50px'
+                  spH='50px'
+                  spW='100px'
+                  cirH='50px'
+                  cirW='50px'
+                />
+              );
             }
 
             return (
