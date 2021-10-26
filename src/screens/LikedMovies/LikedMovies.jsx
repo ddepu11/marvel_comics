@@ -44,7 +44,7 @@ const LikedMovies = () => {
     } else {
       setMovies([]);
     }
-  }, [userLoggedIn, info, dispatch, apiKey]);
+  }, [userLoggedIn, info.likedMovies, dispatch, apiKey]);
 
   if (userLoading || loading) {
     return <Loading />;
