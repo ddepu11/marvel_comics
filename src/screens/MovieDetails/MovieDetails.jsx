@@ -29,6 +29,7 @@ import {
   errorNofication,
   successNofication,
 } from '../../features/notification';
+import CircleLoader from '../../components/CircleLoader';
 
 const MovieDetails = () => {
   const dispatch = useDispatch();
@@ -42,9 +43,15 @@ const MovieDetails = () => {
   } = useSelector((state) => state.user.value);
 
   const [loading, setLoading] = useState(true);
+  const [likeDislikeLoading, setLikeDislikeLoading] = useState(false);
+
+  const [saveWathLaterLoading, setSaveWathLaterLoading] = useState(false);
+
   const [dropDownLoading, setDropDownLoading] = useState(false);
+
   const [playlists, setPlaylists] = useState([]);
   const [playlist, setPlaylist] = useState('');
+
   const [showCreatePlaylistDialog, setShowCreatePlaylistDialog] =
     useState(false);
 
@@ -53,6 +60,7 @@ const MovieDetails = () => {
 
   const [movie, setMovie] = useState(null);
   const [video, setVideo] = useState({ play: false, id: null });
+
   const apiKey = process.env.TMDB_API_KEY;
   const didMount = useRef(true);
 
@@ -144,7 +152,7 @@ const MovieDetails = () => {
   const dislikeMovie = async (e) => {
     e.preventDefault();
 
-    setLoading(true);
+    setLikeDislikeLoading(true);
 
     try {
       const userDocRef = doc(firestoreInstance, 'users', userDocId);
@@ -164,18 +172,18 @@ const MovieDetails = () => {
         );
       }
 
-      setLoading(false);
+      setLikeDislikeLoading(false);
       dispatch(successNofication(`disliked the movie!`));
     } catch (err) {
       dispatch(errorNofication(err.code.slice(5)));
-      setLoading(false);
+      setLikeDislikeLoading(false);
     }
   };
 
   const likeMovie = async (e) => {
     e.preventDefault();
 
-    setLoading(true);
+    setLikeDislikeLoading(true);
 
     try {
       const userDocRef = doc(firestoreInstance, 'users', userDocId);
@@ -195,17 +203,17 @@ const MovieDetails = () => {
         );
       }
 
-      setLoading(false);
+      setLikeDislikeLoading(false);
 
       dispatch(successNofication(`liked the movie!`));
     } catch (err) {
       dispatch(errorNofication(err.code.slice(5)));
-      setLoading(false);
+      setLikeDislikeLoading(false);
     }
   };
 
   const addToWatchLaterList = async () => {
-    setLoading(true);
+    setSaveWathLaterLoading(true);
 
     try {
       const userDocRef = doc(firestoreInstance, 'users', userDocId);
@@ -225,16 +233,16 @@ const MovieDetails = () => {
         );
       }
 
-      setLoading(false);
+      setSaveWathLaterLoading(false);
       dispatch(successNofication(`Saved to watch later!`));
     } catch (err) {
       dispatch(errorNofication(err.code.slice(5)));
-      setLoading(false);
+      setSaveWathLaterLoading(false);
     }
   };
 
   const removeFromWatchLaterList = async () => {
-    setLoading(true);
+    setSaveWathLaterLoading(true);
 
     try {
       const userDocRef = doc(firestoreInstance, 'users', userDocId);
@@ -254,11 +262,11 @@ const MovieDetails = () => {
         );
       }
 
-      setLoading(false);
+      setSaveWathLaterLoading(false);
       dispatch(successNofication(`Removed from watch later!`));
     } catch (err) {
       dispatch(errorNofication(err.code.slice(5)));
-      setLoading(false);
+      setSaveWathLaterLoading(false);
     }
   };
 
@@ -476,13 +484,22 @@ const MovieDetails = () => {
 
             <div className='btns flex'>
               {userLoggedIn && (
-                <div className='like_or_dislike flex'>
-                  {info.likedMovies.includes(movie.id) ? (
-                    <FcLike fontSize='1.3em' onClick={dislikeMovie} />
+                <>
+                  {likeDislikeLoading ? (
+                    <CircleLoader wrapperMargin='0' />
                   ) : (
-                    <FcLikePlaceholder fontSize='1.3em' onClick={likeMovie} />
+                    <div className='like_or_dislike flex'>
+                      {info.likedMovies.includes(movie.id) ? (
+                        <FcLike fontSize='1.3em' onClick={dislikeMovie} />
+                      ) : (
+                        <FcLikePlaceholder
+                          fontSize='1.3em'
+                          onClick={likeMovie}
+                        />
+                      )}
+                    </div>
                   )}
-                </div>
+                </>
               )}
 
               {!userLoggedIn && (
@@ -495,13 +512,19 @@ const MovieDetails = () => {
               )}
 
               {userLoggedIn && (
-                <div className='watch_later flex'>
-                  {info.watchLater.includes(movie.id) ? (
-                    <BsStopwatchFill onClick={removeFromWatchLaterList} />
+                <>
+                  {saveWathLaterLoading ? (
+                    <CircleLoader wrapperMargin='0' />
                   ) : (
-                    <BsStopwatch onClick={addToWatchLaterList} />
+                    <div className='watch_later flex'>
+                      {info.watchLater.includes(movie.id) ? (
+                        <BsStopwatchFill onClick={removeFromWatchLaterList} />
+                      ) : (
+                        <BsStopwatch onClick={addToWatchLaterList} />
+                      )}
+                    </div>
                   )}
-                </div>
+                </>
               )}
 
               {movie.videos && movie.videos.results.length !== 0 && (
@@ -553,7 +576,7 @@ const MovieDetails = () => {
                 className='videos_dropdown flex'
                 ref={playListDropDown}
               >
-                {dropDownLoading && <Loading size='10vh' />}
+                {dropDownLoading && <CircleLoader wrapperMargin=' 15px auto' />}
 
                 {!dropDownLoading &&
                   playlists.length !== 0 &&
