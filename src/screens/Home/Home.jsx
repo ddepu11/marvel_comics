@@ -109,14 +109,16 @@ const Home = () => {
   return (
     <Wrapper>
       <div className='heading'>
-        {currentGenere !== ''
-          ? `${currentGenere} genere movies:`
-          : 'Popular movies:'}
+        {newMovies.length !== 0 && (
+          <>
+            {currentGenere !== ''
+              ? `${currentGenere} genere movies:`
+              : 'Popular movies:'}
+          </>
+        )}
       </div>
 
-      {/* && globalMovies.length === 0 */}
-
-      {newMovies.length !== 0 && (
+      {newMovies.length !== 0 ? (
         <div className='movies '>
           {newMovies.map((item) => (
             <Movie
@@ -125,22 +127,9 @@ const Home = () => {
             />
           ))}
         </div>
+      ) : (
+        <h1 className='no_movies'>Sorry could not found any movie!</h1>
       )}
-
-      {/* : (
-        <h1 className='no_movies'>Sorry there are no movies to show!</h1>
-      ) */}
-
-      {/* {globalMovies.length !== 0 && (
-        <div className='movies '>
-          {globalMovies.map((item) => (
-            <Movie
-              movie={item}
-              key={Math.floor(Math.random() * item.id * Date.now())}
-            />
-          ))}
-        </div>
-      )} */}
 
       {loading && <Loading size='20vh' />}
     </Wrapper>
