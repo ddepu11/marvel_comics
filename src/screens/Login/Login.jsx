@@ -80,12 +80,12 @@ const Login = () => {
             margin='25px 0 0 0'
             padding='5px 0px'
             borderRadius='5px'
-            bgColor='#d8d6d6'
-            color='#000'
+            bgColor='#db584f'
+            color='#fcfcfc'
             transform=''
             handleClick={loginAsRandomUser}
           >
-            Login as ranom user
+            Login as random user
           </Button>
         </form>
 
